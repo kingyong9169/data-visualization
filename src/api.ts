@@ -92,7 +92,7 @@ const getOpenApi =
         headers: OPEN_API_HEADERS,
       })
         .then((response) => response.json())
-        .then((data: T) => ({
+        .then<res.Success<T>>((data: T) => ({
           key,
           name,
           data,
