@@ -1,13 +1,23 @@
+/* eslint-disable import/no-anonymous-default-export */
+import {
+  OpenAPIHeaders,
+  OpenAPIObj,
+  OpenAPIParamType,
+  OpenAPIParams,
+  OpenAPIType,
+  ParsedOpenAPIInfo,
+} from './types/openApiTypes';
+
 const DEMO_PROJECT_API_TOCKEN = 'XGJHUSQZTI2AVIENWA27HI5V';
 const DEMO_PROJECT_CODE = 5490;
-const OPEN_API_HEADERS = {
-  'x-whatap-pcode': DEMO_PROJECT_CODE,
+const OPEN_API_HEADERS: OpenAPIHeaders = {
+  'x-whatap-pcode': DEMO_PROJECT_CODE.toString(),
   'x-whatap-token': DEMO_PROJECT_API_TOCKEN,
 };
 
 const OPEN_API_ROOT = 'https://api.whatap.io/open/api';
 
-const OPEN_API = {
+const OPEN_API: OpenAPIObj = {
   '': {
     act_agent: '활성화 상태의 에이전트 수',
     inact_agent: '비활성화 상태의 에이전트 수',
@@ -32,39 +42,62 @@ const OPEN_API = {
   },
   json: {
     'exception/{stime}/{etime}': 'Exception 발생 ',
+    'heap_use/{stime}/{etime}/avg': '평균 Heap 사용량',
+    'heap_use/{stime}/{etime}/max': '최대 Heap 사용량',
+    'thread_count/{stime}/{etime}': '데이터 개별 쓰레드 개수',
+    'thread_count/{stime}/{etime}/avg': '데이터 평균 쓰레드 개수',
+    'thread_daemon/{stime}/{etime}': '데이터 개별 쓰레드 대몬 개수',
+    'thread_daemon/{stime}/{etime}/avg': '데이터 평균 쓰레드 대몬 개수',
+    'thread_peak_count/{stime}/{etime}': '데이터 개별 쓰레드 피크 개수',
+    'thread_peak_count/{stime}/{etime}/avg': '데이터 평균 쓰레드 피크 개수',
+    'threadpool_active/{stime}/{etime}': '데이터 개별 쓰레드풀 개수',
+    'threadpool_active/{stime}/{etime}/avg': '데이터 평균 쓰레드풀 개수',
+    'threadpool_queue/{stime}/{etime}': '데이터 개별 쓰레드풀 큐 개수',
+    'threadpool_queue/{stime}/{etime}/avg': '데이터 평균 쓰레드풀 큐 개수',
   },
 };
 
-const getPath = (url: string, param: object = {}) => {
+const getPath = (
+  url: string,
+  param: OpenAPIParams = {
+    stime: '',
+    etime: '',
+  },
+) => {
   let path = url;
-  for (let key in param) {
-    path = path.replace(new RegExp('\\{' + key + '\\}', 'g'), param[key]);
+  for (const key in param) {
+    path = path.replace(
+      new RegExp('\\{' + key + '\\}', 'g'),
+      param[key as OpenAPIParamType].toString(),
+    );
   }
 
   return path;
 };
 
-const getOpenApi = (type: string) => (key, param) =>
-  new Promise((resolve, reject) => {
-    if (key in OPEN_API[type]) {
-      return resolve({
-        url: [OPEN_API_ROOT, type, key].filter((path) => !!path).join('/'),
-        name: OPEN_API[type][key],
-      });
-    } else {
-      reject('잘못된 API 정보');
-    }
-  }).then(({ url, name }) =>
-    fetch(getPath(url, param), {
-      headers: OPEN_API_HEADERS,
-    })
-      .then((response) => response.json())
-      .then((data) => ({
-        key,
-        name,
-        data,
-      })),
-  );
+const getOpenApi =
+  (type: OpenAPIType) =>
+  <T>(key: string, param?: OpenAPIParams) =>
+    new Promise<ParsedOpenAPIInfo>((resolve, reject) => {
+      if (key in OPEN_API[type]) {
+        return resolve({
+          url: [OPEN_API_ROOT, type, key].filter((path) => !!path).join('/'),
+          name: OPEN_API[type][key],
+        });
+      } else {
+        reject('잘못된 API 정보');
+      }
+    }).then(({ url, name }) =>
+      fetch(getPath(url, param), {
+        headers: OPEN_API_HEADERS,
+      })
+        .then((response) => response.json())
+        .then((data: T) => ({
+          key,
+          name,
+          data,
+        })),
+    );
 
 const spot = getOpenApi('');
 const series = getOpenApi('json');
