@@ -1,18 +1,18 @@
 declare namespace res {
-  type AgentTemplate<T> = {
+  type AgentTemplate = {
     pcode: number;
+    oids: number[];
     type: string;
     stime: number;
     etime: number;
     interval: number;
-    data: T;
   };
   type AgentData = [number, number];
   type IndividualAgentData = {
     oname: string;
     oid: number;
-    data: AgentData[];
+    series: AgentData[];
   };
-  type IndividualAgent = AgentTemplate<IndividualAgentData[]>;
-  type AverageAgentData = AgentTemplate<AgentData[]> & { op: string };
+  type IndividualAgent = AgentTemplate & { objects: IndividualAgentData[] };
+  type AverageAgentData = AgentTemplate & { series: AgentData[] };
 }
