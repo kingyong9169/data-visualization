@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import useGetAgentThread from 'src/hooks/api/useGetAgentThread';
 
 import { threadKindDatas, threadTypeDatas } from './constants';
+import { useAgentThreadIndividualChart, useAgentThreadAvgChart } from './chart';
 
-export default function useAgentThread() {
+export function useAgentThread() {
   const [threadType, setThreadType] = useState('thread_count');
   const [kind, setKind] = useState('');
   const datas = useGetAgentThread(threadType, kind);
@@ -27,4 +28,9 @@ export default function useAgentThread() {
     title: `${kindTitle} ${typeTitle}`,
     ...datas,
   };
+}
+
+export function useAgentGraphKind(kind: string) {
+  if (kind === 'avg') return useAgentThreadAvgChart;
+  return useAgentThreadIndividualChart;
 }
