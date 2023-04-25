@@ -12,8 +12,8 @@ export default function AgentThread() {
     useAgentThread();
   const useAgentChart = useAgentGraphKind(kind);
   const chartRef = useAgentChart(data, {
-    width: 700,
-    height: 700,
+    width: 300,
+    height: 300,
     margin,
   });
 

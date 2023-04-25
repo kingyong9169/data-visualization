@@ -51,12 +51,13 @@ export function useAgentThreadIndividualChart(
       .domain([xMin || 0, xMax || 0])
       .range([left, width - right]);
     const xAxis = axisBottom(xScale)
-      .ticks(objects[0].series.length)
-      .tickFormat(timeFormat('%H:%M'));
+      .ticks(5)
+      .tickFormat(timeFormat('%H:%M'))
+      .tickSizeOuter(0);
     const yScale = scaleLinear()
       .domain([yMin || 0, yMax || 0])
       .range([height - bottom, top]);
-    const yAxis = axisLeft(yScale).ticks(10);
+    const yAxis = axisLeft(yScale).ticks(5).tickSizeOuter(0);
     const colorScale = scaleOrdinal(schemeCategory10);
 
     const makeLine = line()
@@ -115,12 +116,13 @@ export function useAgentThreadAvgChart(
       .domain([xMin || 0, xMax || 0])
       .range([left, width - right]);
     const xAxis = axisBottom(xScale)
-      .ticks(series.length)
-      .tickFormat(timeFormat('%H:%M'));
+      .ticks(4)
+      .tickFormat(timeFormat('%H:%M'))
+      .tickSizeOuter(0);
     const yScale = scaleLinear()
       .domain([yMin || 0, yMax || 0])
       .range([height - bottom, top]);
-    const yAxis = axisLeft(yScale).ticks(10);
+    const yAxis = axisLeft(yScale).ticks(5).tickSizeOuter(0);
     const colorScale = scaleOrdinal(schemeCategory10);
 
     const makeLine = line()
