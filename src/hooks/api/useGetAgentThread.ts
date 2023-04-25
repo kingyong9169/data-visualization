@@ -7,10 +7,13 @@ import useAsync from '../useAsync';
 function useGetAgentThread(type: string, kind?: string) {
   const refinedKind = kind ? `/${kind}` : '';
   return useAsync(asyncKeys.agentThread(type, kind || ''), () =>
-    api.series<res.IndividualAgent>(`${type}/{stime}/{etime}${refinedKind}`, {
-      stime: Date.now() - HOUR,
-      etime: Date.now(),
-    }),
+    api.series<res.IndividualAgent | res.AverageAgent>(
+      `${type}/{stime}/{etime}${refinedKind}`,
+      {
+        stime: Date.now() - HOUR,
+        etime: Date.now(),
+      },
+    ),
   );
 }
 
