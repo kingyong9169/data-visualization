@@ -20,6 +20,7 @@ export default defineConfig({
         additionalData: `
           @import '@styles/variables.scss';
           @import '@styles/colors.scss';
+          @import '@styles/mixin.scss';
         `,
       },
     },

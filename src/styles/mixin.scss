@@ -1,0 +1,6 @@
+@mixin responsive-graph($width, $height) {
+  max-width: $width;
+  width: 100%;
+  max-height: $height;
+  height: 100%;
+}
