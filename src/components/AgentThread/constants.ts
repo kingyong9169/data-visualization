@@ -23,11 +23,11 @@ export const threadTypeDatas = [
 
 export const threadKindDatas = [
   {
-    name: '에이전트 개별 데이터',
+    name: '에이전트 데이터 개별',
     value: '',
   },
   {
-    name: '에이전트 평균 데이터',
+    name: '에이전트 데이터 평균',
     value: 'avg',
   },
 ];

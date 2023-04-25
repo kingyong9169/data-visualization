@@ -1,35 +1,31 @@
-import React, { useState } from 'react';
-import useAgentThread from 'src/hooks/api/useAgentThread';
-
 import Select from '../Select';
 import SubTitle from '../SubTitle';
 
+import $ from './style.module.scss';
+import useAgentThreadChart from './chart';
 import { threadKindDatas, threadTypeDatas } from './constants';
+import useAgentThread from './hooks';
 
 export default function AgentThread() {
-  const [threadType, setThreadType] = useState('thread_count');
-  const [kind, setKind] = useState('');
-  const { data, isLoading, error } = useAgentThread(threadType, kind);
-
-  const handleThreadType = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setThreadType(e.target.value);
-  const handleThreadKind = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setKind(e.target.value);
+  const { threadType, kind, handleThreadKind, handleThreadType, data, title } =
+    useAgentThread();
+  const charRef = useAgentThreadChart(data);
 
   return (
     <div>
-      <SubTitle text={data?.name || '로딩 중'} />
-      <Select
-        datas={threadTypeDatas}
-        currentValue={threadType}
-        handleChange={handleThreadType}
-      />
+      <SubTitle text={title} />
       <Select
         datas={threadKindDatas}
         currentValue={kind}
         handleChange={handleThreadKind}
       />
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <Select
+        datas={threadTypeDatas}
+        currentValue={threadType}
+        handleChange={handleThreadType}
+      />
+      <div ref={charRef} className={$['agent-chart']} />
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
   );
 }
