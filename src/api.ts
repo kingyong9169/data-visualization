@@ -57,10 +57,6 @@ const OPEN_API: OpenAPIObj = {
   },
 };
 
-const MAX_CONCURRENT_REQUESTS = 3; // 동시에 처리할 최대 API 요청 수
-const waitingQueue = []; // 요청 대기 큐
-const inProgressQueue = []; // 현재 요청 중인 큐
-
 const getPath = (
   url: string,
   param: OpenAPIParams = {
@@ -79,7 +75,12 @@ const getPath = (
   return path;
 };
 
-const getOpenApi =
+export type ApiRequest = {
+  key: string;
+  param?: OpenAPIParams;
+};
+
+export const getOpenApi =
   (type: OpenAPIType) =>
   async <T>(key: string, param?: OpenAPIParams) => {
     const apiInfo = new Promise<ParsedOpenAPIInfo>((resolve, reject) => {
