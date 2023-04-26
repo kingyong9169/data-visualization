@@ -99,10 +99,10 @@ export default function useAsync<D, E>(
   useEffect(() => {
     if (skip) return;
     makeRequest();
-    // const intervalId = setInterval(() => {
-    //   makeRequest();
-    // }, 5000);
-    // return () => clearInterval(intervalId);
+    const intervalId = setInterval(() => {
+      makeRequest();
+    }, 5000);
+    return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
