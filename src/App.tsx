@@ -17,6 +17,7 @@ function App() {
   } = useApiPolling();
 
   useEffect(() => {
+    // 대기 큐 -> 대기, 진행 큐에 변화가 생기면 진행 큐에 추가(최대 동시 요청 개수를 넘지 않도록 제한)
     if (
       activeRequestNum >= MAX_CONCURRENT_REQUESTS ||
       inProgressQueue.length >= MAX_CONCURRENT_REQUESTS
@@ -24,7 +25,6 @@ function App() {
       return;
     if (waitingQueue.length === 0) return;
     async function processWaitQueue() {
-      // 대기 큐 -> 대기, 진행 큐에 변화가 생기면 진행 큐에 추가(최대 동시 요청 개수를 넘지 않도록 제한)
       const toSliceIdx = MAX_CONCURRENT_REQUESTS - activeRequestNum;
       if (toSliceIdx <= 0) return;
       const toAddQueue = waitingQueue.slice(0, toSliceIdx);
@@ -38,14 +38,12 @@ function App() {
   }, [inProgressQueue, waitingQueue, activeRequestNum]);
 
   useEffect(() => {
-    console.log('[inProgressQueue]', inProgressQueue);
-  }, [inProgressQueue]);
-
-  useEffect(() => {
     // 진행 큐 -> 동시 요청 개수가 넘지 않으면 대기 큐에 있는 것 모두 실행(최대 동시 요청 개수만큼)
     if (activeRequestNum >= MAX_CONCURRENT_REQUESTS) return;
     function processQueue() {
-      inProgressQueue.forEach(async (requestInfo) => {
+      const sliceIdx = MAX_CONCURRENT_REQUESTS - activeRequestNum;
+      const slicedQueue = inProgressQueue.slice(0, sliceIdx);
+      slicedQueue.forEach(async (requestInfo) => {
         const { type, key, param, onSuccess, onError } = requestInfo;
         try {
           // 요청하고 나서 진행 큐가 바뀌니까 useEffect가 실행되면서 이미 진행되는 api를 또 호출함
@@ -62,10 +60,6 @@ function App() {
     }
     processQueue();
   }, [activeRequestNum, inProgressQueue]);
-
-  console.log(activeRequestNum);
-  console.log('change inProgressQueue', inProgressQueue);
-  console.log('change waitingQueue', waitingQueue);
 
   return (
     <main style={{ padding: 20 }}>
