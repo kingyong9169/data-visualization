@@ -99,7 +99,7 @@ export default function useAsync<D, E>(
   useEffect(() => {
     if (skip) return;
     makeRequest();
-    const intervalId = setInterval(() => {
+    const intervalId = setInterval(() => { // TODO: setTimeout으로 변경
       makeRequest();
     }, 5000);
     return () => clearInterval(intervalId);

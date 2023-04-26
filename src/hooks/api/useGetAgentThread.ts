@@ -11,6 +11,7 @@ function useGetAgentThread(type: string, kind?: string) {
     etime: Date.now(),
   };
   return useAsync(asyncKeys.agentThread(type, kind || ''), {
+    // TODO: 5초마다 param이 바뀌도록
     id: Math.random(),
     type: 'json',
     key,
