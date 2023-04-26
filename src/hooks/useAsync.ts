@@ -72,9 +72,15 @@ function reducer<D, E>(state: InitialState<D, E>, action: InitialAction<D, E>) {
   }
 }
 
+type AsyncInfo = QueryItem & {
+  needStime?: boolean;
+  needEtime?: boolean;
+  term?: number;
+};
+
 export default function useAsync<D, E>(
   deps: unknown[],
-  queueItem: QueryItem,
+  queueItem: AsyncInfo,
   skip = false,
 ) {
   const { queueRequest } = useApiPolling();
@@ -89,17 +95,25 @@ export default function useAsync<D, E>(
     if (!state.data) {
       dispatch({ type: 'LOADING' });
     } else dispatch({ type: 'FETCHING' });
+    const { id, type, key, needStime, needEtime, term } = queueItem;
     queueRequest({
-      ...queueItem,
-      onSuccess: <D>(data: D) => dispatch({ type: 'SUCCESS', data }),
-      onError: <E>(e: E) => dispatch({ type: 'ERROR', error: e }),
+      id,
+      type,
+      key,
+      param: {
+        stime: needStime && term ? Date.now() - term : '',
+        etime: needEtime ? Date.now() : '',
+      },
+      onSuccess: (data: D) => dispatch({ type: 'SUCCESS', data }),
+      onError: (e: E) => dispatch({ type: 'ERROR', error: e }),
     });
   };
 
   useEffect(() => {
     if (skip) return;
     makeRequest();
-    const intervalId = setInterval(() => { // TODO: setTimeout으로 변경
+    const intervalId = setInterval(() => {
+      // TODO: setTimeout으로 변경
       makeRequest();
     }, 5000);
     return () => clearInterval(intervalId);
