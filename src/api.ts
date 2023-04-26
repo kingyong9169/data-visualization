@@ -57,6 +57,10 @@ const OPEN_API: OpenAPIObj = {
   },
 };
 
+const MAX_CONCURRENT_REQUESTS = 3; // 동시에 처리할 최대 API 요청 수
+const waitingQueue = []; // 요청 대기 큐
+const inProgressQueue = []; // 현재 요청 중인 큐
+
 const getPath = (
   url: string,
   param: OpenAPIParams = {
@@ -77,8 +81,8 @@ const getPath = (
 
 const getOpenApi =
   (type: OpenAPIType) =>
-  <T>(key: string, param?: OpenAPIParams) =>
-    new Promise<ParsedOpenAPIInfo>((resolve, reject) => {
+  async <T>(key: string, param?: OpenAPIParams) => {
+    const apiInfo = new Promise<ParsedOpenAPIInfo>((resolve, reject) => {
       if (key in OPEN_API[type]) {
         return resolve({
           url: [OPEN_API_ROOT, type, key].filter((path) => !!path).join('/'),
@@ -87,17 +91,23 @@ const getOpenApi =
       } else {
         reject('잘못된 API 정보');
       }
-    }).then(({ url, name }) =>
-      fetch(getPath(url, param), {
+    });
+
+    try {
+      const { url, name } = await apiInfo;
+      const response = await fetch(getPath(url, param), {
         headers: OPEN_API_HEADERS,
-      })
-        .then((response) => response.json())
-        .then<res.Success<T>>((data: T) => ({
-          key,
-          name,
-          data,
-        })),
-    );
+      });
+      const data: res.Success<T> = await response.json();
+      return {
+        key,
+        name,
+        data,
+      };
+    } catch (err) {
+      throw new Error('error 발생');
+    }
+  };
 
 const spot = getOpenApi('');
 const series = getOpenApi('json');
