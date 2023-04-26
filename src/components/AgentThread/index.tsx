@@ -8,8 +8,16 @@ import { useAgentGraphKind, useAgentThread } from './hooks';
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
 export default function AgentThread() {
-  const { threadType, kind, handleThreadKind, handleThreadType, data, title } =
-    useAgentThread();
+  const {
+    threadType,
+    kind,
+    handleThreadKind,
+    handleThreadType,
+    data,
+    isLoading,
+    isFetching,
+    title,
+  } = useAgentThread();
   const useAgentChart = useAgentGraphKind(kind);
   const chartRef = useAgentChart(data, {
     width: 300,
@@ -30,7 +38,11 @@ export default function AgentThread() {
         currentValue={threadType}
         handleChange={handleThreadType}
       />
-      <div ref={chartRef} className={$['agent-chart']} />
+      {isLoading && !isFetching ? (
+        <div>로딩중...</div>
+      ) : (
+        <div ref={chartRef} className={$['agent-chart']} />
+      )}
     </div>
   );
 }
