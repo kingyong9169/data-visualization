@@ -1,6 +1,6 @@
 import { asyncKeys } from 'src/constants/asyncKeys';
 import { HOUR } from 'src/constants/time';
-import { AgentKind } from 'src/components/\bAgentThread/hooks';
+import { AgentKind } from 'src/components/AgentThread/hooks';
 
 import useAsync from '../useAsync';
 

@@ -57,7 +57,7 @@ export function useAgentThreadIndividualChart(
     const yScale = scaleLinear()
       .domain([yMin || 0, yMax || 0])
       .range([height - bottom, top]);
-    const yAxis = axisLeft(yScale).ticks(5).tickSizeOuter(0);
+    const yAxis = axisLeft(yScale).ticks(5).tickSize(0).tickSizeOuter(0);
     const colorScale = scaleOrdinal(schemeCategory10);
 
     const makeLine = line()
@@ -122,7 +122,7 @@ export function useAgentThreadAvgChart(
     const yScale = scaleLinear()
       .domain([yMin || 0, yMax || 0])
       .range([height - bottom, top]);
-    const yAxis = axisLeft(yScale).ticks(5).tickSizeOuter(0);
+    const yAxis = axisLeft(yScale).ticks(5).tickSize(0).tickSizeOuter(0);
     const colorScale = scaleOrdinal(schemeCategory10);
 
     const makeLine = line()
