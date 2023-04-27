@@ -6,6 +6,11 @@ import { threadKindDatas, threadTypeDatas } from './constants';
 import { useAgentGraphKind, useAgentThread } from './hooks';
 
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+const styles = {
+  width: 300,
+  height: 300,
+  margin,
+};
 
 export default function AgentThread() {
   const {
@@ -18,11 +23,7 @@ export default function AgentThread() {
     title,
   } = useAgentThread();
   const useAgentChart = useAgentGraphKind(kind);
-  const chartRef = useAgentChart(data, {
-    width: 300,
-    height: 300,
-    margin,
-  });
+  const chartRef = useAgentChart(data, styles);
 
   return (
     <div>

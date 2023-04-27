@@ -1,12 +1,15 @@
 import { asyncKeys } from 'src/constants/asyncKeys';
 import { HOUR } from 'src/constants/time';
+import { AgentKind } from 'src/components/\bAgentThread/hooks';
 
 import useAsync from '../useAsync';
 
-function useGetAgentThread(type: string, kind?: string) {
-  const refinedKind = kind ? `/${kind}` : '';
+function useGetAgentThread(type: string, kind?: AgentKind) {
+  const refinedKind = kind === 'avg' ? `/${kind}` : '';
   const key = `${type}/{stime}/{etime}${refinedKind}`;
-  return useAsync(asyncKeys.agentThread(type, kind || ''), {
+  return useAsync<
+    res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>
+  >(asyncKeys.agentThread(type, kind || ''), {
     id: Math.random(),
     type: 'json',
     key,

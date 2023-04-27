@@ -14,14 +14,17 @@ type StatisticsKind =
 function useProjectStatistics(type: StatisticsType, kind: StatisticsKind) {
   const refinedType = type === 'raw' ? 'raw' : '';
   const key = `tag/${kind}?stime={stime}&etime={etime}&timeMerge=avg`;
-  return useAsync(asyncKeys.projectStatistics(type, kind), {
-    id: Math.random(),
-    type: refinedType,
-    key,
-    needStime: true,
-    needEtime: true,
-    term: HOUR,
-  });
+  return useAsync<res.Success<res.ProjectBasic>>(
+    asyncKeys.projectStatistics(type, kind),
+    {
+      id: Math.random(),
+      type: refinedType,
+      key,
+      needStime: true,
+      needEtime: true,
+      term: HOUR,
+    },
+  );
 }
 
 export default useProjectStatistics;

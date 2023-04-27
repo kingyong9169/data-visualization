@@ -14,8 +14,8 @@ export type QueryItem = ApiRequest & {
 };
 
 export type QueueRequestObj = QueryItem & {
-  onSuccess: (args: unknown) => void;
-  onError: (args: unknown) => void;
+  onSuccess: (args: any) => void;
+  onError: (args: any) => void;
 };
 
 type PollingContext = {

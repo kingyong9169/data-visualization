@@ -78,7 +78,7 @@ type AsyncInfo = QueryItem & {
   term?: number;
 };
 
-export default function useAsync<D, E>(
+export default function useAsync<D, E extends Error = Error>(
   deps: unknown[],
   queueItem: AsyncInfo,
   skip = false,
