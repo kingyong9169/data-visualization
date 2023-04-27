@@ -15,7 +15,6 @@ export default function AgentThread() {
     handleThreadType,
     data,
     isLoading,
-    isFetching,
     title,
   } = useAgentThread();
   const useAgentChart = useAgentGraphKind(kind);
@@ -38,7 +37,7 @@ export default function AgentThread() {
         currentValue={threadType}
         handleChange={handleThreadType}
       />
-      {isLoading && !isFetching ? (
+      {isLoading ? (
         <div>로딩중...</div>
       ) : (
         <div ref={chartRef} className={$['agent-chart']} />

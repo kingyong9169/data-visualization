@@ -48,7 +48,7 @@ function reducer<D, E>(state: InitialState<D, E>, action: InitialAction<D, E>) {
       };
     case 'FETCHING':
       return {
-        isLoading: true,
+        isLoading: false,
         isFetching: true,
         data: state.data ? state.data : null,
         error: null,

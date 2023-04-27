@@ -58,12 +58,11 @@ const OPEN_API: OpenAPIObj = {
     'threadpool_queue/{stime}/{etime}/avg': '데이터 평균 쓰레드풀 큐 개수',
   },
   raw: {
-    'tag/app_counter/tps?stime={stime}&etime={etime}&timeMerge=avg':
-      '프로젝트 내 TPS',
+    'tag/app_counter/tps?stime={stime}&etime={etime}&timeMerge=avg': 'TPS(개)',
     'tag/app_counter/resp_time?stime={stime}&etime={etime}&timeMerge=avg':
-      '프로젝트 내 평균 응답 시간',
+      '평균 응답 시간(s)',
     'tag/app_host_resource/cpu?stime={stime}&etime={etime}&timeMerge=avg':
-      '프로젝트 내 평균 CPU 사용률',
+      '평균 CPU 사용률(%)',
   },
 };
 
