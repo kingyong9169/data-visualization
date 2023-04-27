@@ -1,0 +1,12 @@
+.project-chart {
+  @include responsive-graph(300px, 300px);
+  margin-top: 20px;
+
+  .text {
+    text {
+      font-size: 12px;
+      font-weight: 600;
+      fill: #698686;
+    }
+  }
+}
