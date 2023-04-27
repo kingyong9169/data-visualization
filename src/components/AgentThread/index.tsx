@@ -26,7 +26,7 @@ export default function AgentThread() {
   const chartRef = useAgentChart(data, styles);
 
   return (
-    <div>
+    <div className={$['container']}>
       <SubTitle text={title} />
       <Select
         datas={threadKindDatas}

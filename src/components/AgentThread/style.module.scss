@@ -1,3 +1,12 @@
+.container {
+  width: 100%;
+  padding: $chart-padding;
+  border: 1px solid $grey-400;
+  border-radius: 4px;
+  box-shadow: $box-shadow;
+  background-color: $white;
+}
+
 .agent-chart {
   @include responsive-graph(300px, 300px);
   margin-top: 20px;

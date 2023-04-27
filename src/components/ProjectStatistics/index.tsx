@@ -41,11 +41,11 @@ export default function ProjectStatistics() {
   );
 
   return (
-    <div className={$['project-chart']}>
+    <div className={$['container']}>
       {isAllLoading ? (
         <div>로딩 중..</div>
       ) : (
-        <svg viewBox={viewBox}>
+        <svg viewBox={viewBox} className={$['project-chart']}>
           <Axis
             scale={yScale}
             ticks={3}
