@@ -112,13 +112,18 @@ export default function useAsync<D, E>(
   useEffect(() => {
     if (skip) return;
     makeRequest();
-    const intervalId = setInterval(() => {
-      // TODO: setTimeout으로 변경
-      makeRequest();
-    }, 5000);
-    return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
+
+  useEffect(() => {
+    // TODO: error 발생 시 timer 스탑
+    if (skip) return;
+    const timer = setTimeout(() => {
+      makeRequest();
+    }, 5000);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps, state.data]);
 
   return { ...state, refetch: makeRequest };
 }
