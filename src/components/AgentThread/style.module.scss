@@ -8,6 +8,6 @@
 }
 
 .agent-chart {
-  @include responsive-graph(300px, 300px);
+  @include responsive-graph(100%, 100%);
   margin-top: 20px;
 }
