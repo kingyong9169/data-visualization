@@ -39,6 +39,8 @@ const OPEN_API: OpenAPIObj = {
     act_httpc: '액티브 HTTP Call 수',
     act_dbc: '액티브 DB Connection 수',
     act_socket: '액티브 Socket 수',
+    'tag/db_pool_detail/dbconn?stime={stime}&etime={etime}&timeMerge=avg':
+      '프로젝트 내 데이터 소스별 DB Connection 수',
   },
   json: {
     'exception/{stime}/{etime}': 'Exception 발생 ',
@@ -62,10 +64,6 @@ const OPEN_API: OpenAPIObj = {
       '프로젝트 내 평균 응답 시간',
     'tag/app_host_resource/cpu?stime={stime}&etime={etime}&timeMerge=avg':
       '프로젝트 내 평균 CPU 사용률',
-  },
-  tag: {
-    'db_pool_detail/dbconn?stime={stime}&etime={etime}&timeMerge=avg':
-      '프로젝트 내 데이터 소스별 DB Connection 수',
   },
 };
 
