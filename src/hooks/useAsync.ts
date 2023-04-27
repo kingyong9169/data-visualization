@@ -90,7 +90,7 @@ export default function useAsync<D, E>(
     data: null,
     error: null,
   });
-
+  // TODO: isFetching 로직 수정
   const makeRequest = () => {
     if (!state.data) {
       dispatch({ type: 'LOADING' });
