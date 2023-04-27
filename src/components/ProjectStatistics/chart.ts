@@ -6,6 +6,7 @@ import {
   select,
 } from 'd3';
 import { useEffect, useRef } from 'react';
+import { TRANSPARENT_40 } from 'src/constants/color';
 
 export type CharStyleParams = {
   width: number;
@@ -48,7 +49,10 @@ export function useProjectStatisticsChart(
       .selectAll('rect')
       .data(data)
       .join('rect')
-      .attr('fill', (d) => `${colorScale(yValue(d).toString())}66`)
+      .attr(
+        'fill',
+        (d) => `${colorScale(yValue(d).toString())}${TRANSPARENT_40}`,
+      )
       .attr('width', (d) => xScale(+yValue(d)) - left)
       .attr('height', yScale.bandwidth() - topBottom)
       .attr('x', left)

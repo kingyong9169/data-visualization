@@ -12,6 +12,7 @@ import {
   timeFormat,
 } from 'd3';
 import { useEffect, useRef } from 'react';
+import { TRANSPARENT_40 } from 'src/constants/color';
 
 export type CharStyleParams = {
   width: number;
@@ -80,7 +81,10 @@ export function useAgentThreadIndividualChart(
           .append('path')
           .datum(series)
           .attr('fill', 'none')
-          .attr('stroke', (data) => colorScale(data[0].toString()))
+          .attr(
+            'stroke',
+            (data) => `${colorScale(data[0].toString())}${TRANSPARENT_40}`,
+          )
           .attr('stroke-width', 1.5)
           .attr('stroke-linejoin', 'round')
           .attr('stroke-linecap', 'round')
@@ -141,7 +145,10 @@ export function useAgentThreadAvgChart(
       .append('path')
       .datum(series)
       .attr('fill', 'none')
-      .attr('stroke', (data) => colorScale(data[0].toString()))
+      .attr(
+        'stroke',
+        (data) => `${colorScale(data[0].toString())}${TRANSPARENT_40}`,
+      )
       .attr('stroke-width', 1.5)
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round')
