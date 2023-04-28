@@ -7,17 +7,7 @@ import {
 } from 'd3';
 import { useEffect, useRef } from 'react';
 import { TRANSPARENT_40 } from 'src/constants/color';
-
-export type ChartStyleParams = {
-  width: number;
-  height: number;
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-};
+import { ChartStyleParams } from 'src/types/chart';
 
 export function useBarChart(
   data: res.Success<number>[],

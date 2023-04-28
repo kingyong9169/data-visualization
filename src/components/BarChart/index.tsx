@@ -1,7 +1,9 @@
+import { ChartStyleParams } from 'src/types/chart';
+
 import Axis from '../Axis';
 
 import $ from './style.module.scss';
-import { ChartStyleParams, useBarChart } from './chart';
+import { useBarChart } from './chart';
 
 type Props = {
   datas: res.Success<number>[];

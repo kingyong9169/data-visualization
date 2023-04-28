@@ -13,21 +13,11 @@ import {
 } from 'd3';
 import { useEffect, useRef } from 'react';
 import { TRANSPARENT_40 } from 'src/constants/color';
-
-export type CharStyleParams = {
-  width: number;
-  height: number;
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-};
+import { ChartStyleParams } from 'src/types/chart';
 
 export function useAgentThreadIndividualChart(
   data: res.Success<res.IndividualAgent> | null,
-  { width, height, margin }: CharStyleParams,
+  { width, height, margin }: ChartStyleParams,
 ) {
   const { top, right, bottom, left } = margin;
   const chartRef = useRef<HTMLDivElement | null>(null);
