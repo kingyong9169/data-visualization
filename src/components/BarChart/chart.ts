@@ -8,7 +8,7 @@ import {
 import { useEffect, useRef } from 'react';
 import { TRANSPARENT_40 } from 'src/constants/color';
 
-export type CharStyleParams = {
+export type ChartStyleParams = {
   width: number;
   height: number;
   margin: {
@@ -19,15 +19,15 @@ export type CharStyleParams = {
   };
 };
 
-export function useProjectStatisticsChart(
-  data: res.Success<res.ProjectBasic>[],
-  { width, height, margin }: CharStyleParams,
+export function useBarChart(
+  data: res.Success<number>[],
+  { width, height, margin }: ChartStyleParams,
 ) {
   const { top, right, bottom, left } = margin;
   const textRef = useRef<SVGTextElement | null>(null);
   const rectRef = useRef<SVGRectElement | null>(null);
-  const textValue = (d: res.Success<res.ProjectBasic>) => d.name;
-  const yValue = (d: res.Success<res.ProjectBasic>) => d.data.toString();
+  const textValue = (d: res.Success<number>) => d.name;
+  const yValue = (d: res.Success<number>) => d.data.toString();
 
   const yScale = scaleBand()
     .domain(data.map(yValue))
@@ -42,8 +42,7 @@ export function useProjectStatisticsChart(
 
   useEffect(() => {
     if (!rectRef.current || !textRef.current || !data) return;
-    const getYPos = (d: res.Success<res.ProjectBasic>) =>
-      yScale(yValue(d)) || 0;
+    const getYPos = (d: res.Success<number>) => yScale(yValue(d)) || 0;
 
     select(rectRef.current)
       .selectAll('rect')

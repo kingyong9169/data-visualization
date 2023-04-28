@@ -1,0 +1,11 @@
+.bar-chart {
+  @include responsive-graph(100%, 100%);
+
+  .text {
+    text {
+      font-size: 12px;
+      font-weight: 600;
+      fill: #698686;
+    }
+  }
+}
