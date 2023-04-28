@@ -1,6 +1,6 @@
 import useProjectStatistics from 'src/hooks/api/useProjectStatistics';
 
-import BarChart from '../BarChart';
+import BarChart from '../shared/BarChart';
 
 import $ from './style.module.scss';
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };

@@ -1,8 +1,8 @@
 import { timeFormat } from 'd3';
 
-import Select from '../Select';
-import SubTitle from '../SubTitle';
-import LineChart from '../LineChart';
+import SubTitle from '../shared/SubTitle';
+import Select from '../shared/Select';
+import LineChart from '../shared/LineChart';
 
 import $ from './style.module.scss';
 import { threadKindDatas, threadTypeDatas } from './constants';

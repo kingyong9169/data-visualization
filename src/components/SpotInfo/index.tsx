@@ -1,6 +1,6 @@
 import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
 
-import Infomatics from '../Infomatics';
+import Infomatics from '../shared/Infomatics';
 
 export default function SpotInfo() {
   const { data: actData, isLoading: actLoading } = useGetSpotInfo('act_agent');
