@@ -6,16 +6,3 @@
   box-shadow: $box-shadow;
   background-color: $white;
 }
-
-.project-chart {
-  @include responsive-graph(100%, 100%);
-  margin-top: 20px;
-
-  .text {
-    text {
-      font-size: 12px;
-      font-weight: 600;
-      fill: #698686;
-    }
-  }
-}
