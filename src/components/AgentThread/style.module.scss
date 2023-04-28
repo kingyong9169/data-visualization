@@ -6,8 +6,3 @@
   box-shadow: $box-shadow;
   background-color: $white;
 }
-
-.agent-chart {
-  @include responsive-graph(100%, 100%);
-  margin-top: 20px;
-}

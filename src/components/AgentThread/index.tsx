@@ -1,9 +1,12 @@
+import { timeFormat } from 'd3';
+
 import Select from '../Select';
 import SubTitle from '../SubTitle';
+import LineChart from '../LineChart';
 
 import $ from './style.module.scss';
 import { threadKindDatas, threadTypeDatas } from './constants';
-import { useAgentGraphKind, useAgentThread } from './hooks';
+import { useAgentThread } from './hooks';
 
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 const styles = {
@@ -11,6 +14,21 @@ const styles = {
   height: 300,
   margin,
 };
+
+function isAvgThreadData(
+  data: res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>,
+): data is res.Success<res.AverageAgent> {
+  return !!(data.data as res.AverageAgent).series;
+}
+
+function refinedData(
+  data: res.Success<res.AverageAgent> | res.Success<res.IndividualAgent> | null,
+): res.AgentData[][] {
+  if (!data) return [[[0, 0]]];
+  return isAvgThreadData(data)
+    ? [data.data.series]
+    : data.data.objects.map(({ series }) => series);
+}
 
 export default function AgentThread() {
   const {
@@ -22,8 +40,7 @@ export default function AgentThread() {
     isLoading,
     title,
   } = useAgentThread();
-  const useAgentChart = useAgentGraphKind(kind);
-  const chartRef = useAgentChart(data, styles);
+  const datas = refinedData(data);
 
   return (
     <div className={$['container']}>
@@ -41,7 +58,11 @@ export default function AgentThread() {
       {isLoading ? (
         <div>로딩중...</div>
       ) : (
-        <div ref={chartRef} className={$['agent-chart']} />
+        <LineChart
+          datas={datas}
+          styles={styles}
+          xFormat={timeFormat('%H:%M')}
+        />
       )}
     </div>
   );
