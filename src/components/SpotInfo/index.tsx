@@ -1,7 +1,6 @@
 import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
 
-import $ from './style.module.scss';
-import SpotItem from './SpotItem';
+import Infomatics from '../Infomatics';
 
 export default function SpotInfo() {
   const { data: actData, isLoading: actLoading } = useGetSpotInfo('act_agent');
@@ -19,14 +18,8 @@ export default function SpotInfo() {
   );
 
   return (
-    <div className={$['spot-container']}>
-      {isAllLoading ? (
-        <div>로딩중...</div>
-      ) : (
-        spotDatas.map((data, idx) => (
-          <SpotItem data={data} key={data.name + idx} />
-        ))
-      )}
-    </div>
+    <>
+      {isAllLoading ? <div>로딩중...</div> : <Infomatics datas={spotDatas} />}
+    </>
   );
 }
