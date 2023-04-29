@@ -27,7 +27,7 @@ const OPEN_API: OpenAPIObj = {
     tps: '초당 트랜잭션 수',
     user: '5분간 집계된 고유 사용자 수',
     actx: '액티브 트랜잭션 수',
-    rtime: '평균 응답 시간',
+    rtime: '평균 응답 시간(ms)',
     cpu: 'CPU 사용률',
     threadpool_active: '쓰레드풀 활성 쓰레드 수',
     threadpool_queue: '쓰레드풀 큐잉 쓰레드 수',

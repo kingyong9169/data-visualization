@@ -5,6 +5,7 @@ import ProjectStatistics from './components/ProjectStatistics';
 import SpotInfo from './components/SpotInfo';
 import usePollingController from './hooks/usePollingController';
 import SpotMethodInfo from './components/SpotMethodInfo';
+import SpotTransaction from './components/SpotTransaction';
 
 function App() {
   usePollingController();
@@ -15,6 +16,7 @@ function App() {
       <SpotMethodInfo />
       <AgentThread />
       <ProjectStatistics />
+      <SpotTransaction />
     </main>
   );
 }
