@@ -1,4 +1,5 @@
 import {
+  max,
   scaleBand,
   scaleLinear,
   scaleOrdinal,
@@ -24,7 +25,7 @@ export function useBarChart(
     .range([height - bottom, top]);
 
   const xScale = scaleLinear()
-    .domain([0, 100])
+    .domain([0, max(data, (d) => +yValue(d)) || 0])
     .range([left, width - right]);
 
   const colorScale = scaleOrdinal(schemeCategory10);
@@ -43,9 +44,9 @@ export function useBarChart(
         (d) => `${colorScale(yValue(d).toString())}${TRANSPARENT_40}`,
       )
       .attr('width', (d) => xScale(+yValue(d)) - left)
-      .attr('height', yScale.bandwidth() - topBottom)
+      .attr('height', yScale.bandwidth() / 1.5)
       .attr('x', left)
-      .attr('y', (d) => getYPos(d) + topBottom / 2);
+      .attr('y', (d) => getYPos(d) + yScale.bandwidth() / 6);
 
     select(textRef.current)
       .selectAll('text')
@@ -53,7 +54,7 @@ export function useBarChart(
       .join('text')
       .text(textValue)
       .attr('x', left + 10)
-      .attr('y', (d) => getYPos(d) + topBottom * 0.925);
+      .attr('y', (d) => getYPos(d) + yScale.bandwidth() / 1.7);
   }, [
     data,
     width,
