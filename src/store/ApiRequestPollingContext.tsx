@@ -2,7 +2,9 @@ import {
   Dispatch,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
+  useMemo,
   useState,
 } from 'react';
 import { ApiRequest } from 'src/api';
@@ -18,10 +20,13 @@ export type QueueRequestObj = QueryItem & {
   onError: (args: any) => void;
 };
 
-type PollingContext = {
+type PollingValueContext = {
   waitingQueue: QueueRequestObj[];
   inProgressQueue: QueueRequestObj[];
   activeRequestNum: number;
+};
+
+type PollingActionContext = {
   setActiveRequestNum: Dispatch<SetStateAction<number>>;
   setQueue: (kind: 'wait' | 'progress', queue: QueueRequestObj[]) => void;
   addToQueue: (kind: 'wait' | 'progress', requestInfo: QueueRequestObj) => void;
@@ -32,10 +37,13 @@ type PollingContext = {
   queueRequest: (request: QueueRequestObj) => void;
 };
 
-const ApiPollingContext = createContext<PollingContext>({
+const ApiPollingValueContext = createContext<PollingValueContext>({
   waitingQueue: [],
   inProgressQueue: [],
   activeRequestNum: 0,
+});
+
+const ApiPollingActionContext = createContext<PollingActionContext>({
   setActiveRequestNum: () => {},
   setQueue: () => {},
   addToQueue: () => {},
@@ -55,68 +63,70 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
   const [waitingQueue, setWaitingQueue] = useState<QueueRequestObj[]>([]);
   const [inProgressQueue, setInProgressQueue] = useState<QueueRequestObj[]>([]);
 
-  const setQueue = (kind: 'wait' | 'progress', queue: QueueRequestObj[]) => {
-    if (kind === 'wait') {
-      setWaitingQueue(queue);
-    } else {
-      setInProgressQueue(queue);
-    }
-  };
+  const addToQueue = useCallback(
+    (kind: 'wait' | 'progress', requestInfo: QueueRequestObj) => {
+      if (kind === 'wait') {
+        setWaitingQueue((queue) => [...queue, requestInfo]);
+      } else {
+        setInProgressQueue((queue) => [...queue, requestInfo]);
+      }
+    },
+    [],
+  );
 
-  const addToQueue = (
-    kind: 'wait' | 'progress',
-    requestInfo: QueueRequestObj,
-  ) => {
-    if (kind === 'wait') {
-      setWaitingQueue((queue) => [...queue, requestInfo]);
-    } else {
-      setInProgressQueue((queue) => [...queue, requestInfo]);
-    }
-  };
-
-  const removeFromQueueCallback =
+  const removeFromQueueCallback = useCallback(
     (requestInfo: QueueRequestObj) => (queue: QueueRequestObj[]) => {
       const index = queue.findIndex((item) => item.id === requestInfo.id);
       const frontArr = queue.slice(0, index);
       const backArr = queue.slice(index + 1);
       return index > -1 ? [...frontArr, ...backArr] : queue;
-    };
+    },
+    [],
+  );
 
-  const removeFromQueue = (
-    kind: 'wait' | 'progress',
-    requestInfo: QueueRequestObj,
-  ) => {
-    if (kind === 'wait') {
-      setWaitingQueue(removeFromQueueCallback(requestInfo));
-    } else {
-      setInProgressQueue(removeFromQueueCallback(requestInfo));
-    }
-  };
-
-  const queueRequest = (request: QueueRequestObj) => {
-    addToQueue('wait', request);
-  };
+  const actions = useMemo(
+    () => ({
+      setActiveRequestNum,
+      addToQueue,
+      removeFromQueueCallback,
+      setQueue(kind: 'wait' | 'progress', queue: QueueRequestObj[]) {
+        if (kind === 'wait') {
+          setWaitingQueue(queue);
+        } else {
+          setInProgressQueue(queue);
+        }
+      },
+      removeFromQueue(kind: 'wait' | 'progress', requestInfo: QueueRequestObj) {
+        if (kind === 'wait') {
+          setWaitingQueue(removeFromQueueCallback(requestInfo));
+        } else {
+          setInProgressQueue(removeFromQueueCallback(requestInfo));
+        }
+      },
+      queueRequest(request: QueueRequestObj) {
+        return addToQueue('wait', request);
+      },
+    }),
+    [],
+  );
 
   return (
-    <ApiPollingContext.Provider
+    <ApiPollingValueContext.Provider
       value={{
         waitingQueue,
         inProgressQueue,
         activeRequestNum,
-        setActiveRequestNum,
-        setQueue,
-        addToQueue,
-        removeFromQueue,
-        queueRequest,
       }}
     >
-      {children}
-    </ApiPollingContext.Provider>
+      <ApiPollingActionContext.Provider value={actions}>
+        {children}
+      </ApiPollingActionContext.Provider>
+    </ApiPollingValueContext.Provider>
   );
 }
 
-function useApiPolling(): PollingContext {
-  const context = useContext(ApiPollingContext);
+function useApiPollingValue(): PollingValueContext {
+  const context = useContext(ApiPollingValueContext);
   if (context === undefined) {
     throw new Error(
       'useApiRequestPolling must be used within a ApiRequestPollingProvider',
@@ -125,4 +135,19 @@ function useApiPolling(): PollingContext {
   return context;
 }
 
-export { ApiPollingContext, ApiPollingProvider, useApiPolling };
+function useApiPollingAction(): PollingActionContext {
+  const context = useContext(ApiPollingActionContext);
+  if (context === undefined) {
+    throw new Error(
+      'useApiRequestPolling must be used within a ApiRequestPollingProvider',
+    );
+  }
+  return context;
+}
+
+export {
+  ApiPollingActionContext,
+  ApiPollingProvider,
+  useApiPollingValue,
+  useApiPollingAction,
+};

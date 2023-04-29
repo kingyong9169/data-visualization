@@ -1,5 +1,8 @@
 import { useReducer, useEffect } from 'react';
-import { QueryItem, useApiPolling } from 'src/store/ApiRequestPollingContext';
+import {
+  QueryItem,
+  useApiPollingAction,
+} from 'src/store/ApiRequestPollingContext';
 
 type InitialState<D, E> = {
   isLoading: boolean;
@@ -83,14 +86,14 @@ export default function useAsync<D, E extends Error = Error>(
   queueItem: AsyncInfo,
   skip = false,
 ) {
-  const { queueRequest } = useApiPolling();
+  const { queueRequest } = useApiPollingAction();
   const [state, dispatch] = useReducer<ReducerFn<D, E>>(reducer, {
     isLoading: false,
     isFetching: false,
     data: null,
     error: null,
   });
-  // TODO: isFetching 로직 수정
+
   const makeRequest = () => {
     if (!state.data) {
       dispatch({ type: 'LOADING' });

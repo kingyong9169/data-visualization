@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
 import { getOpenApi } from 'src/api';
 import { MAX_CONCURRENT_REQUESTS } from 'src/constants/polling';
-import { useApiPolling } from 'src/store/ApiRequestPollingContext';
+import {
+  useApiPollingAction,
+  useApiPollingValue,
+} from 'src/store/ApiRequestPollingContext';
 
 export default function usePollingController() {
-  const {
-    waitingQueue,
-    inProgressQueue,
-    activeRequestNum,
-    setActiveRequestNum,
-    setQueue,
-    addToQueue,
-    removeFromQueue,
-  } = useApiPolling();
+  const { waitingQueue, inProgressQueue, activeRequestNum } =
+    useApiPollingValue();
+  const { setActiveRequestNum, setQueue, addToQueue, removeFromQueue } =
+    useApiPollingAction();
 
   useEffect(() => {
     // 대기 큐 -> 대기, 진행 큐에 변화가 생기면 진행 큐에 추가(최대 동시 요청 개수를 넘지 않도록 제한)
