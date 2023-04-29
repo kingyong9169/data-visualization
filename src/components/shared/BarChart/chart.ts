@@ -19,9 +19,11 @@ export function useBarChart(
   const rectRef = useRef<SVGRectElement | null>(null);
   const textValue = (d: res.Success<number>) => d.name;
   const yValue = (d: res.Success<number>) => d.data.toString();
+  const notDuplicatedYValue = (d: res.Success<number>, i: number) =>
+    d.data.toString() + '.'.repeat(i);
 
   const yScale = scaleBand()
-    .domain(data.map(yValue))
+    .domain(data.map((d, i) => d.data.toString() + '.'.repeat(i)))
     .range([height - bottom, top]);
 
   const xScale = scaleLinear()
@@ -33,7 +35,8 @@ export function useBarChart(
 
   useEffect(() => {
     if (!rectRef.current || !textRef.current || !data) return;
-    const getYPos = (d: res.Success<number>) => yScale(yValue(d)) || 0;
+    const getYPos = (d: res.Success<number>, i: number) =>
+      yScale(notDuplicatedYValue(d, i)) || 0;
 
     select(rectRef.current)
       .selectAll('rect')
@@ -46,7 +49,7 @@ export function useBarChart(
       .attr('width', (d) => xScale(+yValue(d)) - left)
       .attr('height', yScale.bandwidth() / 1.5)
       .attr('x', left)
-      .attr('y', (d) => getYPos(d) + yScale.bandwidth() / 6);
+      .attr('y', (d, i) => getYPos(d, i) + yScale.bandwidth() / 6);
 
     select(textRef.current)
       .selectAll('text')
@@ -54,7 +57,7 @@ export function useBarChart(
       .join('text')
       .text(textValue)
       .attr('x', left + 10)
-      .attr('y', (d) => getYPos(d) + yScale.bandwidth() / 1.7);
+      .attr('y', (d, i) => getYPos(d, i) + yScale.bandwidth() / 1.7);
   }, [
     data,
     width,
