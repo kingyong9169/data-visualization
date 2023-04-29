@@ -1,4 +1,5 @@
 import useProjectStatistics from 'src/hooks/api/useProjectStatistics';
+import { memo } from 'react';
 
 import BarChart from '../shared/BarChart';
 
@@ -10,7 +11,7 @@ const styles = {
   margin,
 };
 
-export default function ProjectStatistics() {
+function ProjectStatistics() {
   const { data: tpsData, isLoading: tpsLoading } = useProjectStatistics(
     'raw',
     'app_counter/tps',
@@ -43,3 +44,5 @@ export default function ProjectStatistics() {
     </div>
   );
 }
+
+export default memo(ProjectStatistics);

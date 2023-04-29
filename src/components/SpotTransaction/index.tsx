@@ -1,8 +1,9 @@
 import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
+import { memo } from 'react';
 
 import Infomatics from '../shared/Infomatics';
 
-export default function SpotTransaction() {
+function SpotTransaction() {
   const { data: txData, isLoading: txLoading } = useGetSpotInfo('txcount');
   const { data: tpsData, isLoading: tpsLoading } = useGetSpotInfo('tps');
   const { data: userData, isLoading: userLoading } = useGetSpotInfo('user');
@@ -23,3 +24,5 @@ export default function SpotTransaction() {
     </>
   );
 }
+
+export default memo(SpotTransaction);

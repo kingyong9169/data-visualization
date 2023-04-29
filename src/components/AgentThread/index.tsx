@@ -1,4 +1,5 @@
 import { timeFormat } from 'd3';
+import { memo } from 'react';
 
 import SubTitle from '../shared/SubTitle';
 import Select from '../shared/Select';
@@ -30,7 +31,7 @@ function refinedData(
     : data.data.objects.map(({ series }) => series);
 }
 
-export default function AgentThread() {
+function AgentThread() {
   const {
     threadType,
     kind,
@@ -67,3 +68,5 @@ export default function AgentThread() {
     </div>
   );
 }
+
+export default memo(AgentThread);

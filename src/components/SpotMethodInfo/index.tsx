@@ -1,4 +1,5 @@
 import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
+import { memo } from 'react';
 
 import BarChart from '../shared/BarChart';
 
@@ -11,7 +12,7 @@ const styles = {
   margin,
 };
 
-export default function SpotMethodInfo() {
+function SpotMethodInfo() {
   const { data: methodData, isLoading: methodLoading } =
     useGetSpotInfo('act_method');
   const { data: sqlData, isLoading: sqlLoading } = useGetSpotInfo('act_sql');
@@ -38,3 +39,5 @@ export default function SpotMethodInfo() {
     </div>
   );
 }
+
+export default memo(SpotMethodInfo);

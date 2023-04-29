@@ -1,8 +1,9 @@
 import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
+import { memo } from 'react';
 
 import Infomatics from '../shared/Infomatics';
 
-export default function SpotInfo() {
+function SpotInfo() {
   const { data: actData, isLoading: actLoading } = useGetSpotInfo('act_agent');
   const { data: inactData, isLoading: inactLoading } =
     useGetSpotInfo('inact_agent');
@@ -23,3 +24,5 @@ export default function SpotInfo() {
     </>
   );
 }
+
+export default memo(SpotInfo);
