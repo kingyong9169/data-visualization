@@ -6,7 +6,7 @@ export type AxisDirection = 'Left' | 'Bottom' | 'Right' | 'Top';
 
 export type AxisHookProps<Domain> = {
   scale: AxisScale<Domain>;
-  format?: null;
+  format?: (domainValue: Domain, index: number) => string;
   ticks: number;
   tickSize?: number;
   direction: AxisDirection;

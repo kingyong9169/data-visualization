@@ -38,7 +38,7 @@ export default function ProjectStatistics() {
       {isAllLoading ? (
         <div>로딩 중..</div>
       ) : (
-        <BarChart datas={xDatas} styles={styles} />
+        <BarChart datas={xDatas} styles={styles} ticks={3} />
       )}
     </div>
   );

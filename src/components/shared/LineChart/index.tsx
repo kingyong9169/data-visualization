@@ -1,17 +1,22 @@
 import { ChartStyleParams } from 'src/types/chart';
+import { AxisDomain } from 'd3';
 
 import { useLineChart } from '../LineChart/chart';
-import Axis from '../Axis';
+import Axis, { AxisHookProps } from '../Axis';
 
 import $ from './style.module.scss';
 
-type Props = {
+type Props<Domain extends AxisDomain> = {
   datas: res.AgentData[][];
   styles: ChartStyleParams;
-  xFormat?: null;
+  xFormat?: AxisHookProps<Domain>['format'];
 };
 
-export default function LineChart({ datas, styles, xFormat }: Props) {
+export default function LineChart<Domain extends AxisDomain>({
+  datas,
+  styles,
+  xFormat,
+}: Props<Domain>) {
   const { lineRef, xScale, yScale } = useLineChart(datas, styles);
   const viewBox = `0 0 ${styles.width} ${styles.height}`;
   return (
