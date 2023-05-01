@@ -3,6 +3,7 @@ import { memo } from 'react';
 
 import Infomatics from '../shared/Infomatics';
 import ErrorFallback from '../shared/ErrorFallback';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 function SpotTransaction() {
   const {
@@ -54,7 +55,7 @@ function SpotTransaction() {
 
   return (
     <>
-      {isAllLoading && <div>로딩중...</div>}
+      {isAllLoading && <LoadingSpinner />}
       {!isAllLoading && !errorExist && <Infomatics datas={spotDatas} />}
       {errorExist && (
         <ErrorFallback message={errorExist.message} reset={reset} />

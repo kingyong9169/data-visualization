@@ -3,6 +3,7 @@ import { memo } from 'react';
 
 import Infomatics from '../shared/Infomatics';
 import ErrorFallback from '../shared/ErrorFallback';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 function SpotInfo() {
   const {
@@ -46,7 +47,7 @@ function SpotInfo() {
 
   return (
     <>
-      {isAllLoading && <div>로딩중...</div>}
+      {isAllLoading && <LoadingSpinner />}
       {errorExist && (
         <ErrorFallback message={errorExist.message} reset={reset} />
       )}

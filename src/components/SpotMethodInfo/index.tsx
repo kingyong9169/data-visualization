@@ -3,6 +3,7 @@ import { memo } from 'react';
 
 import BarChart from '../shared/BarChart';
 import ErrorFallback from '../shared/ErrorFallback';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 import $ from './style.module.scss';
 
@@ -63,7 +64,7 @@ function SpotMethodInfo() {
 
   return (
     <div className={$['container']}>
-      {isAllLoading && <div>로딩중...</div>}
+      {isAllLoading && <LoadingSpinner />}
       {errorExist && (
         <ErrorFallback message={errorExist.message} reset={reset} />
       )}

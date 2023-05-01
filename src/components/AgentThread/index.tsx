@@ -5,6 +5,7 @@ import SubTitle from '../shared/SubTitle';
 import Select from '../shared/Select';
 import LineChart from '../shared/LineChart';
 import ErrorFallback from '../shared/ErrorFallback';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 import $ from './style.module.scss';
 import { threadKindDatas, threadTypeDatas } from './constants';
@@ -59,7 +60,7 @@ function AgentThread() {
         currentValue={threadType}
         handleChange={handleThreadType}
       />
-      {isLoading && <div>로딩중...</div>}
+      {isLoading && <LoadingSpinner />}
       {error && <ErrorFallback message={error.message} reset={reset} />}
       {!isLoading && !error && (
         <LineChart
