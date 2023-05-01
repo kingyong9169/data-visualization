@@ -45,7 +45,7 @@
 - App의 요청 상태를 관리하는 controller(커스텀 hook) 구현
 - 각 컴포넌트(view)에서는 useAsync 커스텀 hook을 사용하여 요청 상태를 관리
 
-3. **TODO**: 데이터 요청에 실패할 경우, timer를 멈추고 화면에 에러 메시지와 retry버튼 제공, retry 버튼 클릭 시 다시 데이터 요청 및 timer 시작
+3. 데이터 요청에 실패할 경우, timer를 멈추고 화면에 에러 메시지와 retry 버튼 제공, retry 버튼 클릭 시 다시 데이터 요청 및 timer 시작
 
 ### 2. 시계열 데이터 네트워크 요청 부하 성능 최적화
 
@@ -66,7 +66,7 @@
 ## To Do List
 
 1. ~~네트워크 요청 부하 성능 최적화~~
-2. data fetching 실패 시 예외 처리
+2. ~~data fetching 실패 시 예외 처리~~
 3. UX 개선
 
 - 라인 차트 indicator
