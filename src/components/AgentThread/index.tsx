@@ -4,6 +4,7 @@ import { memo } from 'react';
 import SubTitle from '../shared/SubTitle';
 import Select from '../shared/Select';
 import LineChart from '../shared/LineChart';
+import ErrorFallback from '../shared/ErrorFallback';
 
 import $ from './style.module.scss';
 import { threadKindDatas, threadTypeDatas } from './constants';
@@ -39,6 +40,8 @@ function AgentThread() {
     handleThreadType,
     data,
     isLoading,
+    error,
+    reset,
     title,
   } = useAgentThread();
   const datas = refinedData(data);
@@ -56,9 +59,9 @@ function AgentThread() {
         currentValue={threadType}
         handleChange={handleThreadType}
       />
-      {isLoading ? (
-        <div>로딩중...</div>
-      ) : (
+      {isLoading && <div>로딩중...</div>}
+      {error && <ErrorFallback message={error.message} reset={reset} />}
+      {!isLoading && !error && (
         <LineChart
           datas={datas}
           styles={styles}

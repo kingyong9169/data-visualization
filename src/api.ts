@@ -114,8 +114,8 @@ export const getOpenApi =
         name,
         data,
       };
-    } catch (err) {
-      throw new Error('error 발생');
+    } catch (err: any) {
+      throw new Error(err);
     }
   };
 
