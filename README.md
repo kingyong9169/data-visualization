@@ -49,9 +49,10 @@
 
 ### 2. 시계열 데이터 네트워크 요청 부하 성능 최적화
 
-1. **TODO**: 첫 번째 요청에는 최근 1시간 동안의 data fetching, 이후 요청에는 마지막 요청 시간부터 현재 시간까지의 data fetching 및 상태 업데이트
+> 첫 번째 요청에는 최근 1시간 동안의 data fetching, 이후 요청에는 마지막 요청 시간부터 현재 시간까지의 data fetching 및 상태 업데이트
 
-- 상태 업데이트 로직을 useAsync hook에 callback으로 전달
+- 상태 업데이트 로직을 useAsync hook의 options.select에 callback으로 전달
+- select에서는 해당 컴포넌트의 데이터 가공 로직 작성
 
 ### 3. 리렌더링 최적화
 
@@ -64,7 +65,7 @@
 
 ## To Do List
 
-1. 네트워크 요청 부하 성능 최적화
+1. ~~네트워크 요청 부하 성능 최적화~~
 2. data fetching 실패 시 예외 처리
 3. UX 개선
 
