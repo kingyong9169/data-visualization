@@ -4,19 +4,79 @@ import { AgentKind } from 'src/components/AgentThread/hooks';
 
 import useAsync from '../useAsync';
 
+function isAgentData(
+  data: res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>,
+): data is res.Success<res.AverageAgent> {
+  return !!(data as res.Success<res.AverageAgent>).data.objectMerge;
+}
+
 function useGetAgentThread(type: string, kind?: AgentKind) {
   const refinedKind = kind === 'avg' ? `/${kind}` : '';
   const key = `${type}/{stime}/{etime}${refinedKind}`;
   return useAsync<
     res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>
-  >(asyncKeys.agentThread(type, kind || ''), {
-    id: Math.random(),
-    type: 'json',
-    key,
-    needStime: true,
-    needEtime: true,
-    term: HOUR,
-  });
+  >(
+    asyncKeys.agentThread(type, kind || ''),
+    {
+      id: Math.random(),
+      type: 'json',
+      key,
+      needStime: true,
+      needEtime: true,
+      term: HOUR,
+    },
+    {
+      lastEtime: (state) => {
+        if (!state) return 0;
+        return state.data.etime;
+      },
+      select: (state, data) => {
+        if (!state) return data;
+        const oids = [...new Set([...state.data.oids, ...data.data.oids])];
+        if (isAgentData(data) && isAgentData(state)) {
+          if (!data.data.series.length) return { ...state };
+          return {
+            ...state,
+            data: {
+              ...state.data,
+              oids,
+              etime: data.data.etime,
+              series: [...state.data.series, ...data.data.series],
+            },
+          };
+        }
+        if (!isAgentData(data) && !isAgentData(state)) {
+          if (!data.data.objects.length) return { ...state };
+          const findOids: number[] = []; // 기존 oid들을 저장
+          const objects = state.data.objects.map((object) => {
+            // 기존 상태와 새로 들어온 data를 비교하여 oid가 같은 object가 있다면 series를 합친다.
+            const target = data.data.objects.findIndex(
+              (targetObject) => targetObject.oid === object.oid,
+            );
+            if (target === -1) return object;
+            findOids.push(data.data.objects[target].oid);
+            return {
+              ...object,
+              series: [...object.series, ...data.data.objects[target].series],
+            };
+          });
+          const filteredObjects = data.data.objects.filter(
+            (object) => !findOids.includes(object.oid),
+          ); // 기존 상태에는 없는 oid를 가진 object를 찾아서 objects에 추가한다.
+          return {
+            ...state,
+            data: {
+              ...state.data,
+              etime: data.data.etime,
+              oids,
+              objects: [...objects, ...filteredObjects],
+            },
+          };
+        }
+        return data;
+      },
+    },
+  );
 }
 
 export default useGetAgentThread;

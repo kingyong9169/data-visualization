@@ -130,7 +130,6 @@ export default function useAsync<D, E extends Error = Error>(
   useEffect(() => {
     if (skip) return;
     makeRequest(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   useEffect(() => {
@@ -140,7 +139,6 @@ export default function useAsync<D, E extends Error = Error>(
       makeRequest();
     }, duration);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...deps, state.data]);
 
   return { ...state, refetch: makeRequest };
