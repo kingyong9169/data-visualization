@@ -2,6 +2,24 @@
 
 > Open API를 활용한 대시보드 구현
 
+## 실행 방법
+
+```bash
+
+# install dependencies
+$ npm install -g yarn
+$ yarn
+
+# development mode
+$ yarn dev
+
+# build
+$ yarn build
+
+# preview
+$ yarn preview
+```
+
 ## 차트 선택 기준
 
 1. 용도와 목적을 고려
