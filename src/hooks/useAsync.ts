@@ -84,6 +84,7 @@ type AsyncInfo = QueryItem & {
 export default function useAsync<D, E extends Error = Error>(
   deps: unknown[],
   queueItem: AsyncInfo,
+  callback?: (data: D) => D,
   skip = false,
 ) {
   const { queueRequest } = useApiPollingAction();
@@ -94,8 +95,8 @@ export default function useAsync<D, E extends Error = Error>(
     error: null,
   });
 
-  const makeRequest = () => {
-    if (!state.data) {
+  const makeRequest = (isChange?: boolean) => {
+    if (!state.data || isChange) {
       dispatch({ type: 'LOADING' });
     } else dispatch({ type: 'FETCHING' });
     const { id, type, key, needStime, needEtime, term } = queueItem;
@@ -107,14 +108,15 @@ export default function useAsync<D, E extends Error = Error>(
         stime: needStime && term ? Date.now() - term : '',
         etime: needEtime ? Date.now() : '',
       },
-      onSuccess: (data: D) => dispatch({ type: 'SUCCESS', data }),
+      onSuccess: (data: D) =>
+        dispatch({ type: 'SUCCESS', data: callback ? callback(data) : data }),
       onError: (e: E) => dispatch({ type: 'ERROR', error: e }),
     });
   };
 
   useEffect(() => {
     if (skip) return;
-    makeRequest();
+    makeRequest(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
