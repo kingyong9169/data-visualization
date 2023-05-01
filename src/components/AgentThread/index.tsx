@@ -1,5 +1,6 @@
 import { timeFormat } from 'd3';
 import { memo } from 'react';
+import { styles } from 'src/constants/chartStyles';
 
 import SubTitle from '../shared/SubTitle';
 import Select from '../shared/Select';
@@ -8,7 +9,7 @@ import ErrorFallback from '../shared/ErrorFallback';
 import LoadingSpinner from '../shared/LoadingSpinner';
 
 import $ from './style.module.scss';
-import { styles, threadKindDatas, threadTypeDatas } from './constants';
+import { threadKindDatas, threadTypeDatas } from './constants';
 import { useAgentThread } from './hooks';
 import { refinedData } from './helpers';
 

@@ -1,18 +1,12 @@
 import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
 import { memo } from 'react';
+import { styles } from 'src/constants/chartStyles';
 
 import BarChart from '../shared/BarChart';
 import ErrorFallback from '../shared/ErrorFallback';
 import LoadingSpinner from '../shared/LoadingSpinner';
 
 import $ from './style.module.scss';
-
-const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-const styles = {
-  width: 300,
-  height: 300,
-  margin,
-};
 
 function SpotMethodInfo() {
   const {
