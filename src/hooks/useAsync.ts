@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useCallback } from 'react';
 import {
   QueryItem,
   useApiPollingAction,
@@ -29,11 +29,16 @@ type ErrorAction<T> = {
   error: T;
 };
 
+type ErrorResetAction = {
+  type: 'ERROR_RESET';
+};
+
 type InitialAction<D, E> =
   | LoadingAction
   | FetchingAction
   | SuccessAction<D>
-  | ErrorAction<E>;
+  | ErrorAction<E>
+  | ErrorResetAction;
 
 type ReducerFn<D, E> = (
   states: InitialState<D, E>,
@@ -70,6 +75,13 @@ function reducer<D, E>(state: InitialState<D, E>, action: InitialAction<D, E>) {
         data: null,
         error: action.error,
       };
+    case 'ERROR_RESET':
+      return {
+        isLoading: false,
+        isFetching: false,
+        data: null,
+        error: null,
+      };
     default:
       throw new Error(`[Unhandled action type]: ${action}`);
   }
@@ -104,6 +116,8 @@ export default function useAsync<D, E extends Error = Error>(
     error: null,
   });
 
+  const reset = useCallback(() => dispatch({ type: 'ERROR_RESET' }), []);
+
   const makeRequest = (isChange?: boolean) => {
     if (!state.data || isChange) {
       dispatch({ type: 'LOADING' });
@@ -133,17 +147,20 @@ export default function useAsync<D, E extends Error = Error>(
 
   useEffect(() => {
     if (skip) return;
-    if (!state.data) makeRequest(true);
-  }, [...deps, state.data]);
+    if (!state.data && !state.error) makeRequest(true);
+  }, [...deps, state.data, state.error]);
 
   useEffect(() => {
-    // TODO: error 발생 시 timer 스탑
-    if (skip || !state.data) return;
+    if (skip || !state.data || state.error) return;
     const timer = setTimeout(() => {
       makeRequest();
     }, duration);
     return () => clearTimeout(timer);
-  }, [...deps, state.data]);
+  }, [...deps, state.data, state.error]);
 
-  return { ...state, refetch: makeRequest };
+  return {
+    ...state,
+    refetch: makeRequest,
+    reset,
+  };
 }
