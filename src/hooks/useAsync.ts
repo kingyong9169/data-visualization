@@ -46,7 +46,7 @@ function reducer<D, E>(state: InitialState<D, E>, action: InitialAction<D, E>) {
       return {
         isLoading: true,
         isFetching: false,
-        data: state.data ? state.data : null,
+        data: null,
         error: null,
       };
     case 'FETCHING':
@@ -81,13 +81,22 @@ type AsyncInfo = QueryItem & {
   term?: number;
 };
 
+type AsyncOptions<D, E> = {
+  select?: (state: InitialState<D, E>['data'], data: D) => D;
+  lastEtime?: (state: InitialState<D, E>['data']) => number;
+  skip?: boolean;
+  pollingDuration?: number;
+};
+
 export default function useAsync<D, E extends Error = Error>(
   deps: unknown[],
   queueItem: AsyncInfo,
-  callback?: (data: D) => D,
-  skip = false,
+  options: AsyncOptions<D, E> = {},
 ) {
+  const { select, lastEtime, skip, pollingDuration } = options;
   const { queueRequest } = useApiPollingAction();
+  const duration = pollingDuration || 5000;
+
   const [state, dispatch] = useReducer<ReducerFn<D, E>>(reducer, {
     isLoading: false,
     isFetching: false,
@@ -100,16 +109,20 @@ export default function useAsync<D, E extends Error = Error>(
       dispatch({ type: 'LOADING' });
     } else dispatch({ type: 'FETCHING' });
     const { id, type, key, needStime, needEtime, term } = queueItem;
+    const lastTime = (lastEtime && lastEtime(state.data)) || 0;
+    const stime = needStime && term ? lastTime || Date.now() - term : '';
+    const etime = needEtime ? Date.now() : '';
+
     queueRequest({
       id,
       type,
       key,
-      param: {
-        stime: needStime && term ? Date.now() - term : '',
-        etime: needEtime ? Date.now() : '',
-      },
+      param: { stime, etime },
       onSuccess: (data: D) =>
-        dispatch({ type: 'SUCCESS', data: callback ? callback(data) : data }),
+        dispatch({
+          type: 'SUCCESS',
+          data: select ? select(state.data, data) : data,
+        }),
       onError: (e: E) => dispatch({ type: 'ERROR', error: e }),
     });
   };
@@ -125,7 +138,7 @@ export default function useAsync<D, E extends Error = Error>(
     if (skip) return;
     const timer = setTimeout(() => {
       makeRequest();
-    }, 5000);
+    }, duration);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...deps, state.data]);
