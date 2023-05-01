@@ -4,7 +4,7 @@ import { AgentKind } from 'src/components/AgentThread/hooks';
 
 import useAsync from '../useAsync';
 
-function isAgentData(
+function isAvgData(
   data: res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>,
 ): data is res.Success<res.AverageAgent> {
   return !!(data as res.Success<res.AverageAgent>).data.objectMerge;
@@ -33,10 +33,10 @@ function useGetAgentThread(type: string, kind?: AgentKind) {
       select: (state, data) => {
         if (!state) return data;
         const oids = [...new Set([...state.data.oids, ...data.data.oids])];
-        if (isAgentData(data) && isAgentData(state)) {
+        if (isAvgData(data) && isAvgData(state)) {
           if (!data.data.series.length) return { ...state };
           return {
-            ...state,
+            ...data,
             data: {
               ...state.data,
               oids,
@@ -45,7 +45,7 @@ function useGetAgentThread(type: string, kind?: AgentKind) {
             },
           };
         }
-        if (!isAgentData(data) && !isAgentData(state)) {
+        if (!isAvgData(data) && !isAvgData(state)) {
           if (!data.data.objects.length) return { ...state };
           const findOids: number[] = []; // 기존 oid들을 저장
           const objects = state.data.objects.map((object) => {
@@ -64,7 +64,7 @@ function useGetAgentThread(type: string, kind?: AgentKind) {
             (object) => !findOids.includes(object.oid),
           ); // 기존 상태에는 없는 oid를 가진 object를 찾아서 objects에 추가한다.
           return {
-            ...state,
+            ...data,
             data: {
               ...state.data,
               etime: data.data.etime,
