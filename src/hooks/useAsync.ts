@@ -109,7 +109,7 @@ export default function useAsync<D, E extends Error = Error>(
       dispatch({ type: 'LOADING' });
     } else dispatch({ type: 'FETCHING' });
     const { id, type, key, needStime, needEtime, term } = queueItem;
-    const lastTime = (lastEtime && lastEtime(state.data)) || 0;
+    const lastTime = (lastEtime && !isChange && lastEtime(state.data)) || 0;
     const stime = needStime && term ? lastTime || Date.now() - term : '';
     const etime = needEtime ? Date.now() : '';
 
@@ -128,13 +128,17 @@ export default function useAsync<D, E extends Error = Error>(
   };
 
   useEffect(() => {
-    if (skip) return;
-    makeRequest(true);
+    dispatch({ type: 'LOADING' });
   }, deps);
 
   useEffect(() => {
-    // TODO: error 발생 시 timer 스탑
     if (skip) return;
+    if (!state.data) makeRequest(true);
+  }, [...deps, state.data]);
+
+  useEffect(() => {
+    // TODO: error 발생 시 timer 스탑
+    if (skip || !state.data) return;
     const timer = setTimeout(() => {
       makeRequest();
     }, duration);
