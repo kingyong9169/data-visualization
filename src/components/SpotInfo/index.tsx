@@ -45,6 +45,8 @@ function SpotInfo() {
     data ? data : { key: '', name: '', data: 0 },
   );
 
+  // TODO: 각 api에 대해 로딩 따로따로
+
   return (
     <>
       {isAllLoading && <LoadingSpinner />}

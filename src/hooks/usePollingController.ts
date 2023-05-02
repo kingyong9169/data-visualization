@@ -11,6 +11,10 @@ export default function usePollingController() {
     useApiPollingValue();
   const { setActiveRequestNum, setQueue, addToQueue, removeFromQueue } =
     useApiPollingAction();
+  // 왜 상태로 큐?
+  // react로 인해 발생하는 문제의 문제를 해결해야 함.
+  // 큐 상태로 인해 리렌더링이 일어나는게 문제
+  // TODO: 옵저버 직접 구현
 
   useEffect(() => {
     // 대기 큐 -> 대기, 진행 큐에 변화가 생기면 진행 큐에 추가(최대 동시 요청 개수를 넘지 않도록 제한)
@@ -40,6 +44,7 @@ export default function usePollingController() {
       const sliceIdx = MAX_CONCURRENT_REQUESTS - activeRequestNum;
       const slicedQueue = inProgressQueue.slice(0, sliceIdx);
       slicedQueue.forEach(async (requestInfo) => {
+        // TODO: 원본 데이터 오염의 가능성이 있다. 이를 방지할 로직이 있는지
         const { type, key, param, onSuccess, onError } = requestInfo;
         try {
           // 요청하고 나서 진행 큐가 바뀌니까 useEffect가 실행되면서 이미 진행되는 api를 또 호출함

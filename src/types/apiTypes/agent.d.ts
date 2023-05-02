@@ -1,4 +1,5 @@
 declare namespace res {
+  // TODO: 타입 체크 라이브러리 마이그레이션하는 상황일 때, 예외 발생할 수 있음
   type AgentCommon = {
     pcode: number;
     oids: number[];
