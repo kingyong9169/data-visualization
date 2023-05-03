@@ -47,8 +47,8 @@ export default function useAsync<D, E extends Error = Error>(
     } else dispatch({ type: 'FETCHING' });
     const { id, type, key, needStime, needEtime, term } = queueItem;
     const lastTime = (lastEtime && !isChange && lastEtime(state.data)) || 0;
-    const stime = needStime && term ? lastTime || Date.now() - term : ''; // TODO: 타입 불일치
-    const etime = needEtime ? Date.now() : ''; // TODO: 타입 불일치
+    const stime: number = needStime && term ? lastTime || Date.now() - term : 0;
+    const etime: number = needEtime ? Date.now() : 0;
 
     queueRequest({
       id,
