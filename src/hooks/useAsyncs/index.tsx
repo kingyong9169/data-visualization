@@ -117,7 +117,7 @@ export default function useAsyncs<D, E extends Error = Error>(
     [...deps, state.data, state.error],
     () => makeRequest(itemListWithId),
     {
-      dismissCondition: skip || !state.data || !!state.error,
+      dismissCondition: skip || !state.data.every((d) => !!d) || !!state.error,
     },
   );
 
