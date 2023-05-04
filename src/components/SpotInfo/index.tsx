@@ -1,4 +1,4 @@
-import useGetSpotInfo from 'src/hooks/api/useGetSpotInfo';
+import { useGetSpotInfos } from 'src/hooks/api/useGetSpotInfo';
 import { memo } from 'react';
 
 import Infomatics from '../shared/Infomatics';
@@ -6,54 +6,22 @@ import ErrorFallback from '../shared/ErrorFallback';
 import LoadingSpinner from '../shared/LoadingSpinner';
 
 function SpotInfo() {
-  const {
-    data: actData,
-    isLoading: actLoading,
-    error: actError,
-    reset: actReset,
-  } = useGetSpotInfo('act_agent');
-  const {
-    data: inactData,
-    isLoading: inactLoading,
-    error: inactError,
-    reset: inactReset,
-  } = useGetSpotInfo('inact_agent');
-  const {
-    data: cpucoreData,
-    isLoading: cpucoreLoading,
-    error: cpucoreError,
-    reset: cpucoreReset,
-  } = useGetSpotInfo('cpucore');
-  const {
-    data: hostData,
-    isLoading: hostLoading,
-    error: hostError,
-    reset: hostReset,
-  } = useGetSpotInfo('host');
+  const { data, isLoading, error, reset } = useGetSpotInfos([
+    'act_agent',
+    'inact_agent',
+    'cpucore',
+    'host',
+  ]);
 
-  const isAllLoading =
-    actLoading || inactLoading || cpucoreLoading || hostLoading;
-  const errorExist = actError || inactError || cpucoreError || hostError;
-  const reset = () => {
-    actReset();
-    inactReset();
-    cpucoreReset();
-    hostReset();
-  };
-
-  const spotDatas = [actData, inactData, cpucoreData, hostData].map((data) =>
+  const spotDatas = data.map((data) =>
     data ? data : { key: '', name: '', data: 0 },
   );
 
-  // TODO: 각 api에 대해 로딩 따로따로
-
   return (
     <>
-      {isAllLoading && <LoadingSpinner />}
-      {errorExist && (
-        <ErrorFallback message={errorExist.message} reset={reset} />
-      )}
-      {!isAllLoading && !errorExist && <Infomatics datas={spotDatas} />}
+      {isLoading && <LoadingSpinner />}
+      {error && <ErrorFallback message={error.message} reset={reset} />}
+      {!isLoading && !error && <Infomatics datas={spotDatas} />}
     </>
   );
 }

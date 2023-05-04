@@ -1,6 +1,7 @@
 import { asyncKeys } from 'src/constants/asyncKeys';
 
 import useAsync from '../useAsync';
+import useAsyncs from '../useAsyncs';
 
 type SpotBasicKind = 'act_agent' | 'inact_agent' | 'host' | 'cpucore' | 'cpu';
 type SpotTransactionKind = 'txcount' | 'tps' | 'user' | 'actx' | 'rtime';
@@ -24,6 +25,17 @@ function useGetSpotInfo(url: SpotKind) {
     type: '',
     key: url,
   });
+}
+
+export function useGetSpotInfos(urls: SpotKind[]) {
+  return useAsyncs<res.Success<res.Spot>>(
+    asyncKeys.spots(urls),
+    urls.map((url) => ({
+      id: Math.random(),
+      type: '',
+      key: url,
+    })),
+  );
 }
 
 export default useGetSpotInfo;
