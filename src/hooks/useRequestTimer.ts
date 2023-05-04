@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { POLLING_DURATION } from 'src/constants/polling';
 
 type TimerOptions = {
   dismissCondition?: boolean;
@@ -10,13 +11,12 @@ export function useRequestTimer(
   options: TimerOptions = {},
 ) {
   const { dismissCondition } = options;
-  const duration = 5000;
 
   useEffect(() => {
     if (dismissCondition) return;
     const timer = setTimeout(() => {
       request();
-    }, duration);
+    }, POLLING_DURATION); // TODO: 시간을 상태로 바꾸기
     return () => clearTimeout(timer);
   }, deps);
 }
