@@ -3,19 +3,21 @@ import { useApiPollingAction } from 'src/store/ApiRequestPollingContext';
 
 import { useRequestTimer } from '../useRequestTimer';
 
-import { AsyncInfo, AsyncOptions, ReducerFn } from './type';
+import { AsyncInfo, AsyncInfoWithId, AsyncOptions, ReducerFn } from './type';
 import { reducer } from './reducer';
 import { getInitialArr } from './utils';
-import { setData, setLoading } from './helpers';
+import { errorHappenedData, setData, setBools } from './helpers';
 
 export default function useAsyncs<D, E extends Error = Error>(
   deps: unknown[],
   queueItemList: AsyncInfo[],
   options: AsyncOptions<D> = {},
 ) {
+  // TODO: 각 쿼리 아이템에 options를 받게끔 확장하기
   const { select, lastEtime, skip } = options;
   const { queueRequests } = useApiPollingAction();
   const itemLen = queueItemList.length;
+  const itemListWithId = queueItemList.map((item, idx) => ({ ...item, idx }));
   const initialDataArr = getInitialArr<D>(itemLen);
   const loadingArr = getInitialArr<boolean>(itemLen, true);
   const loadingEndArr = getInitialArr<boolean>(itemLen, false);
@@ -25,10 +27,10 @@ export default function useAsyncs<D, E extends Error = Error>(
     fetching: [...loadingEndArr],
     data: [...initialDataArr],
     error: null,
+    errorInfos: [...loadingEndArr],
   });
 
   const reset = useCallback(
-    // TODO: 실패한 것만 다시 요청
     () =>
       dispatch({
         type: 'ERROR_RESET',
@@ -38,26 +40,14 @@ export default function useAsyncs<D, E extends Error = Error>(
     [],
   );
 
-  const makeRequest = (isChange?: boolean) => {
-    if (isChange) {
-      dispatch({
-        type: 'LOADING',
-        loading: [...loadingArr],
-        data: [...initialDataArr],
-      });
-    } else
-      dispatch({
-        type: 'FETCHING',
-        fetching: [...loadingArr],
-        data: [...initialDataArr],
-      });
-    const queueReadyList = queueItemList.map((queueItem, idx) => {
-      const { id, type, key, needStime, needEtime, term } = queueItem;
+  const getQueueReadyList = (
+    itemList: AsyncInfoWithId[],
+    isChange?: boolean,
+  ) => {
+    return itemList.map((queueItem) => {
+      const { id, idx, type, key, needStime, needEtime, term } = queueItem;
       const lastTime =
-        (lastEtime &&
-          !isChange &&
-          lastEtime(state.data ? state.data[idx] : null)) ||
-        0;
+        (lastEtime && !isChange && lastEtime(state.data[idx])) || 0;
       const stime: number =
         needStime && term ? lastTime || Date.now() - term : 0;
       const etime: number = needEtime ? Date.now() : 0;
@@ -69,10 +59,8 @@ export default function useAsyncs<D, E extends Error = Error>(
         onSuccess: (data: D) => {
           dispatch({
             type: 'PART_SUCCESS',
-            loadingCb: isChange ? setLoading<D, E, 'loading'>(idx) : undefined,
-            fetchingCb: isChange
-              ? undefined
-              : setLoading<D, E, 'fetching'>(idx),
+            loadingCb: isChange ? setBools<D, E, 'loading'>(idx) : undefined,
+            fetchingCb: isChange ? undefined : setBools<D, E, 'fetching'>(idx),
             dataCb: setData<D, E>(data, idx, select),
           });
         },
@@ -80,25 +68,58 @@ export default function useAsyncs<D, E extends Error = Error>(
           dispatch({
             type: 'ERROR',
             error: e,
-            data: [...initialDataArr],
+            errorCb: errorHappenedData(idx),
+            errorInfosCb: setBools<D, E, 'errorInfos'>(idx),
             loading: [...loadingEndArr],
             fetching: [...loadingEndArr],
           }),
       };
     });
+  };
 
-    queueRequests(queueReadyList);
+  const makeRequest = (itemList: AsyncInfoWithId[], isChange?: boolean) => {
+    if (isChange) {
+      dispatch({
+        type: 'LOADING',
+        loading: [...loadingArr],
+        errorInfos: [...loadingEndArr],
+        data: [...initialDataArr],
+      });
+    } else
+      dispatch({
+        type: 'FETCHING',
+        fetching: [...loadingArr],
+        errorInfos: [...loadingEndArr],
+        data: [...initialDataArr],
+      });
+    queueRequests(getQueueReadyList(itemList, isChange));
   };
 
   useEffect(() => {
     if (skip) return;
-    if (!!state.error) return;
-    makeRequest(true);
-  }, [...deps, state.error]);
+    makeRequest(itemListWithId, true);
+  }, [...deps]);
 
-  useRequestTimer([...deps, state.data, state.error], makeRequest, {
-    dismissCondition: skip || !state.data || !!state.error,
-  });
+  useEffect(() => {
+    if (skip) return;
+    if (state.error || state.errorInfos.every((e) => !e)) return;
+    const errItemIds: number[] = state.errorInfos.reduce((acc, cur, idx) => {
+      if (!cur) return acc;
+      return [...acc, idx];
+    }, [] as number[]);
+    const itemList = itemListWithId.filter(({ idx }) =>
+      errItemIds.includes(idx),
+    );
+    makeRequest(itemList, true);
+  }, [state.error, state.errorInfos]);
+
+  useRequestTimer(
+    [...deps, state.data, state.error],
+    () => makeRequest(itemListWithId),
+    {
+      dismissCondition: skip || !state.data || !!state.error,
+    },
+  );
 
   return {
     data: state.data,

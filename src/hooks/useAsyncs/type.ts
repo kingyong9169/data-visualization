@@ -5,18 +5,21 @@ export type InitialState<D, E> = {
   fetching: boolean[];
   data: D[];
   error: E | null;
+  errorInfos: boolean[];
 };
 
 type LoadingAction<T> = {
   type: 'LOADING';
   loading: boolean[];
   data: T[];
+  errorInfos: boolean[];
 };
 
 type FetchingAction<T> = {
   type: 'FETCHING';
   fetching: boolean[];
   data: T[];
+  errorInfos: boolean[];
 };
 
 type PartSuccessAction<D, E> = {
@@ -37,15 +40,15 @@ type ErrorAction<D, E> = {
   type: 'ERROR';
   loading: boolean[];
   fetching: boolean[];
-  data: D[];
+  errorCb: (data: InitialState<D, E>['data']) => D[];
   error: E;
+  errorInfosCb: (errors: InitialState<D, E>['errorInfos']) => boolean[];
 };
 
-type ErrorResetAction<D> = {
+type ErrorResetAction = {
   type: 'ERROR_RESET';
   loading: boolean[];
   fetching: boolean[];
-  data: D[];
 };
 
 export type InitialAction<D, E> =
@@ -54,7 +57,7 @@ export type InitialAction<D, E> =
   | SuccessAction<D>
   | PartSuccessAction<D, E>
   | ErrorAction<D, E>
-  | ErrorResetAction<D>;
+  | ErrorResetAction;
 
 export type ReducerFn<D, E> = (
   states: InitialState<D, E>,
@@ -67,8 +70,12 @@ export type AsyncInfo = QueryItem & {
   term?: number;
 };
 
+export type AsyncInfoWithId = AsyncInfo & {
+  idx: number;
+};
+
 export type AsyncOptions<D> = {
   select?: (state: D, data: D) => D;
-  lastEtime?: (state: D | null) => number;
+  lastEtime?: (state: D) => number;
   skip?: boolean;
 };

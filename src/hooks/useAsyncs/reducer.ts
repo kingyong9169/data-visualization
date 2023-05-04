@@ -10,12 +10,14 @@ export function reducer<D, E>(
         ...state,
         loading: action.loading,
         data: action.data,
+        errorInfos: action.errorInfos,
         error: null,
       };
     case 'FETCHING':
       return {
         ...state,
         fetching: action.fetching,
+        errorInfos: action.errorInfos,
         data: state.data?.every((d) => !!d) ? state.data : action.data,
         error: null,
       };
@@ -33,17 +35,17 @@ export function reducer<D, E>(
       };
     case 'ERROR':
       return {
-        ...state,
         loading: action.loading,
         fetching: action.fetching,
-        data: action.data,
+        data: action.errorCb(state.data),
         error: action.error,
+        errorInfos: action.errorInfosCb(state.errorInfos),
       };
     case 'ERROR_RESET':
       return {
+        ...state,
         loading: action.loading,
         fetching: action.fetching,
-        data: action.data,
         error: null,
       };
     default:
