@@ -35,6 +35,7 @@ type PollingActionContext = {
     requestInfo: QueueRequestObj,
   ) => void;
   queueRequest: (request: QueueRequestObj) => void;
+  queueRequests: (requestList: QueueRequestObj[]) => void;
 };
 
 const ApiPollingValueContext = createContext<PollingValueContext>({
@@ -48,10 +49,8 @@ const ApiPollingActionContext = createContext<PollingActionContext>({
   setQueue: () => {},
   addToQueue: () => {},
   removeFromQueue: () => {},
-  queueRequest: () => ({
-    onSuccess: () => {},
-    onError: () => {},
-  }),
+  queueRequest: () => {},
+  queueRequests: () => {},
 });
 
 type Props = {
@@ -76,13 +75,20 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
 
   const removeFromQueueCallback = useCallback(
     (requestInfo: QueueRequestObj) => (queue: QueueRequestObj[]) => {
-      const index = queue.findIndex((item) => item.id === requestInfo.id);
+      const index = queue.findIndex((item) => item.id === requestInfo.id); // TODO: o(1)로 바꾸기
       const frontArr = queue.slice(0, index);
       const backArr = queue.slice(index + 1);
       return index > -1 ? [...frontArr, ...backArr] : queue;
     },
     [],
   );
+
+  // 우선순위큐 만들고 id 별로 obj를 만들고, 안에 []를 만들어서 하나씩 빼준다.
+  // 인덱스 타워??
+  // 각 요청에 대한 boolean의 json 자료구조를 만들어서 관리
+  // true면 건너뛰고
+  // 마지막에 한 번에 filter로 정리
+  // pointer 상태로 최근 요청 가리키기
 
   const actions = useMemo(
     () => ({
@@ -105,6 +111,9 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
       },
       queueRequest(request: QueueRequestObj) {
         return addToQueue('wait', request);
+      },
+      queueRequests(requestList: QueueRequestObj[]) {
+        requestList.forEach((request) => addToQueue('wait', request));
       },
     }),
     [],

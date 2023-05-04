@@ -44,18 +44,18 @@ export default function usePollingController() {
       const sliceIdx = MAX_CONCURRENT_REQUESTS - activeRequestNum;
       const slicedQueue = inProgressQueue.slice(0, sliceIdx);
       slicedQueue.forEach(async (requestInfo) => {
-        // TODO: 원본 데이터 오염의 가능성이 있다. 이를 방지할 로직이 있는지
+        // TODO: 원본 데이터 오염의 가능성이 있다. 이를 방지할 로직이 있는지 -> 함수형
+        // TODO: readonly를 지정해서 오염 방지할수도
         const { type, key, param, onSuccess, onError } = requestInfo;
         try {
-          // 요청하고 나서 진행 큐가 바뀌니까 useEffect가 실행되면서 이미 진행되는 api를 또 호출함
-          removeFromQueue('progress', requestInfo);
+          removeFromQueue('progress', requestInfo); // TODO: 얘 땜에 사이드 이펙트 생길 수 있음
           setActiveRequestNum((num) => num + 1);
           const res = await getOpenApi(type)(key, param);
-          setActiveRequestNum((num) => num - 1);
           onSuccess(res);
         } catch (e) {
-          setActiveRequestNum((num) => num - 1);
           onError(e);
+        } finally {
+          setActiveRequestNum((num) => num - 1);
         }
       });
     }
