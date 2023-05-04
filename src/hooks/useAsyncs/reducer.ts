@@ -7,50 +7,43 @@ export function reducer<D, E>(
   switch (action.type) {
     case 'LOADING':
       return {
-        isLoading: true,
-        isFetching: false,
-        dataCandidate: action.dataCandidate,
-        data: null,
+        ...state,
+        loading: action.loading,
+        data: action.data,
         error: null,
       };
     case 'FETCHING':
       return {
-        isLoading: false,
-        isFetching: true,
-        dataCandidate: action.dataCandidate,
-        data: state.data ? state.data : null,
+        ...state,
+        fetching: action.fetching,
+        data: state.data?.every((d) => !!d) ? state.data : action.data,
         error: null,
       };
     case 'PART_SUCCESS':
       return {
         ...state,
-        isLoading: true,
-        isFetching: true,
-        dataCandidate: action.dataCallback(state.dataCandidate),
-        error: null,
-      };
-    case 'SUCCESS':
-      return {
-        isLoading: false,
-        isFetching: false,
-        dataCandidate: action.dataCandidate,
-        data: action.data,
+        loading: action.loadingCb
+          ? action.loadingCb(state.loading)
+          : state.loading,
+        fetching: action.fetchingCb
+          ? action.fetchingCb(state.fetching)
+          : state.fetching,
+        data: action.dataCb(state.data),
         error: null,
       };
     case 'ERROR':
       return {
         ...state,
-        isLoading: false,
-        isFetching: false,
-        data: null,
+        loading: action.loading,
+        fetching: action.fetching,
+        data: action.data,
         error: action.error,
       };
     case 'ERROR_RESET':
       return {
-        isLoading: false,
-        isFetching: false,
-        dataCandidate: action.dataCandidate,
-        data: null,
+        loading: action.loading,
+        fetching: action.fetching,
+        data: action.data,
         error: null,
       };
     default:

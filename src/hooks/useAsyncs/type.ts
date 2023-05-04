@@ -1,40 +1,51 @@
+import { QueryItem } from 'src/store/ApiRequestPollingContext';
+
 export type InitialState<D, E> = {
-  isLoading: boolean;
-  isFetching: boolean;
-  dataCandidate: D[];
-  data: D[] | null;
+  loading: boolean[];
+  fetching: boolean[];
+  data: D[];
   error: E | null;
 };
 
 type LoadingAction<T> = {
   type: 'LOADING';
-  dataCandidate: T[];
+  loading: boolean[];
+  data: T[];
 };
 
 type FetchingAction<T> = {
   type: 'FETCHING';
-  dataCandidate: T[];
+  fetching: boolean[];
+  data: T[];
 };
 
 type PartSuccessAction<D, E> = {
   type: 'PART_SUCCESS';
-  dataCallback: (data: InitialState<D, E>['dataCandidate']) => D[];
+  loadingCb?: (state: InitialState<D, E>['loading']) => boolean[];
+  fetchingCb?: (state: InitialState<D, E>['loading']) => boolean[];
+  dataCb: (data: InitialState<D, E>['data']) => D[];
 };
 
 type SuccessAction<T> = {
   type: 'SUCCESS';
+  loading: boolean[];
+  fetching: boolean[];
   data: T[];
-  dataCandidate: T[];
 };
 
-type ErrorAction<E> = {
+type ErrorAction<D, E> = {
   type: 'ERROR';
+  loading: boolean[];
+  fetching: boolean[];
+  data: D[];
   error: E;
 };
 
-type ErrorResetAction<T> = {
+type ErrorResetAction<D> = {
   type: 'ERROR_RESET';
-  dataCandidate: T[];
+  loading: boolean[];
+  fetching: boolean[];
+  data: D[];
 };
 
 export type InitialAction<D, E> =
@@ -42,10 +53,22 @@ export type InitialAction<D, E> =
   | FetchingAction<D>
   | SuccessAction<D>
   | PartSuccessAction<D, E>
-  | ErrorAction<E>
+  | ErrorAction<D, E>
   | ErrorResetAction<D>;
 
 export type ReducerFn<D, E> = (
   states: InitialState<D, E>,
   action: InitialAction<D, E>,
 ) => InitialState<D, E>;
+
+export type AsyncInfo = QueryItem & {
+  needStime?: boolean;
+  needEtime?: boolean;
+  term?: number;
+};
+
+export type AsyncOptions<D> = {
+  select?: (state: D, data: D) => D;
+  lastEtime?: (state: D | null) => number;
+  skip?: boolean;
+};
