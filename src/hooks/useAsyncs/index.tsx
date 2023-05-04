@@ -1,68 +1,55 @@
-import { useReducer, useEffect, useCallback, useState } from 'react';
-import {
-  QueryItem,
-  useApiPollingAction,
-} from 'src/store/ApiRequestPollingContext';
+import { useReducer, useEffect, useCallback } from 'react';
+import { useApiPollingAction } from 'src/store/ApiRequestPollingContext';
 
 import { useRequestTimer } from '../useRequestTimer';
 
-import { InitialState, ReducerFn } from './type';
+import { AsyncInfo, AsyncOptions, ReducerFn } from './type';
 import { reducer } from './reducer';
-import { getInitialArray } from './utils';
-
-type AsyncInfo = QueryItem & {
-  needStime?: boolean;
-  needEtime?: boolean;
-  term?: number;
-};
-
-type AsyncOptions<D, E> = {
-  select?: (
-    state: InitialState<D, E>['data'],
-    data: InitialState<D, E>['data'],
-  ) => D[];
-  lastEtime?: (state: D | null) => number;
-  skip?: boolean;
-};
+import { getInitialArr } from './utils';
+import { setData, setLoading } from './helpers';
 
 export default function useAsyncs<D, E extends Error = Error>(
   deps: unknown[],
   queueItemList: AsyncInfo[],
-  options: AsyncOptions<D, E> = {},
+  options: AsyncOptions<D> = {},
 ) {
   const { select, lastEtime, skip } = options;
   const { queueRequests } = useApiPollingAction();
   const itemLen = queueItemList.length;
+  const initialDataArr = getInitialArr<D>(itemLen);
+  const loadingArr = getInitialArr<boolean>(itemLen, true);
+  const loadingEndArr = getInitialArr<boolean>(itemLen, false);
 
   const [state, dispatch] = useReducer<ReducerFn<D, E>>(reducer, {
-    isLoading: false,
-    isFetching: false,
-    dataCandidate: getInitialArray(itemLen),
-    data: null,
+    loading: [...loadingEndArr],
+    fetching: [...loadingEndArr],
+    data: [...initialDataArr],
     error: null,
   });
 
   const reset = useCallback(
-    // 실패한 것만 다시 요청
+    // TODO: 실패한 것만 다시 요청
     () =>
       dispatch({
         type: 'ERROR_RESET',
-        dataCandidate: getInitialArray(itemLen),
+        loading: [...loadingEndArr],
+        fetching: [...loadingEndArr],
       }),
     [],
   );
 
   const makeRequest = (isChange?: boolean) => {
-    const initialArr = getInitialArray<D>(itemLen);
-    if (!state.data || isChange) {
+    if (isChange) {
       dispatch({
         type: 'LOADING',
-        dataCandidate: initialArr,
-      }); // TODO: 데이터가 없을 때, 혼란의 여지가 있음
+        loading: [...loadingArr],
+        data: [...initialDataArr],
+      });
     } else
       dispatch({
         type: 'FETCHING',
-        dataCandidate: initialArr,
+        fetching: [...loadingArr],
+        data: [...initialDataArr],
       });
     const queueReadyList = queueItemList.map((queueItem, idx) => {
       const { id, type, key, needStime, needEtime, term } = queueItem;
@@ -82,59 +69,42 @@ export default function useAsyncs<D, E extends Error = Error>(
         onSuccess: (data: D) => {
           dispatch({
             type: 'PART_SUCCESS',
-            dataCallback: (candidate: InitialState<D, E>['dataCandidate']) => {
-              console.log(`candidate[${idx}]`, candidate);
-              return [
-                ...candidate.slice(0, idx),
-                data,
-                ...candidate.slice(idx + 1),
-              ];
-            },
+            loadingCb: isChange ? setLoading<D, E, 'loading'>(idx) : undefined,
+            fetchingCb: isChange
+              ? undefined
+              : setLoading<D, E, 'fetching'>(idx),
+            dataCb: setData<D, E>(data, idx, select),
           });
         },
-        onError: (e: E) => dispatch({ type: 'ERROR', error: e }), // TODO: 큐에서 나머지 요청 없애기
+        onError: (e: E) =>
+          dispatch({
+            type: 'ERROR',
+            error: e,
+            data: [...initialDataArr],
+            loading: [...loadingEndArr],
+            fetching: [...loadingEndArr],
+          }),
       };
     });
-
-    console.log('[queueReadyList]', queueReadyList);
 
     queueRequests(queueReadyList);
   };
 
   useEffect(() => {
-    dispatch({
-      type: 'LOADING',
-      dataCandidate: getInitialArray(itemLen),
-    });
-  }, deps);
-
-  useEffect(() => {
     if (skip) return;
-    if (state.data || state.error) return;
+    if (!!state.error) return;
     makeRequest(true);
-  }, [...deps, state.data, state.error]);
+  }, [...deps, state.error]);
 
-  useEffect(() => {
-    console.log('[candidate changed]', state.dataCandidate);
-    if (!state.dataCandidate.every((data) => !!data)) return;
-    dispatch({
-      type: 'SUCCESS',
-      dataCandidate: getInitialArray(itemLen),
-      data: select
-        ? select(state.data, state.dataCandidate)
-        : state.dataCandidate,
-    });
-  }, [state.dataCandidate]);
-
-  //   useRequestTimer([...deps, state.data, state.error], makeRequest, {
-  //     dismissCondition: skip || !state.data || !!state.error,
-  //   });
+  useRequestTimer([...deps, state.data, state.error], makeRequest, {
+    dismissCondition: skip || !state.data || !!state.error,
+  });
 
   return {
     data: state.data,
     error: state.error,
-    isLoading: state.isLoading,
-    isFetching: state.isFetching,
+    isLoading: state.loading.some((loading) => loading),
+    isFetching: state.fetching.some((loading) => loading),
     refetch: makeRequest,
     reset,
   };
