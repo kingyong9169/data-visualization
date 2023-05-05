@@ -8,12 +8,14 @@ type Props<T> = {
   options: DefaultData[];
   selected: DefaultData['id'][];
   onChange?: (value: T) => void;
+  icon?: JSX.Element;
   name: string;
   direction?: 'left' | 'right';
 } & StyleProps;
 
 function CheckMenuList<T extends DefaultData['id']>(props: Props<T>) {
-  const { name, options, selected, onChange, className, direction } = props;
+  const { name, options, selected, onChange, className, direction, icon } =
+    props;
   const right = direction === 'right' ? 0 : undefined;
   const left = direction === 'left' ? 0 : undefined;
   const { isClicked, setClicked, labelRef } = useSelect<HTMLButtonElement>();
@@ -43,7 +45,7 @@ function CheckMenuList<T extends DefaultData['id']>(props: Props<T>) {
         aria-controls={`${name}-select-list`}
         onClick={handleMouseDown}
       >
-        선택
+        {icon || '선택'}
       </button>
 
       {isClicked && (
