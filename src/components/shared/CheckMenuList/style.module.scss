@@ -1,6 +1,6 @@
 .select-box {
   position: relative;
-  width: 100%;
+  width: fit-content;
   height: 30px;
   display: flex;
   align-items: center;
@@ -20,8 +20,7 @@
   z-index: 10;
   position: absolute;
   top: 36px;
-  left: 0;
-  width: 100%;
+  width: fit-content;
   border-radius: $border-radius;
   background-color: $white;
 

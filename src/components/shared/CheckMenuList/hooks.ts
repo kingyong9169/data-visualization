@@ -1,26 +1,19 @@
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export function useSelect<T extends HTMLElement>(
-  selectBox: RefObject<T>,
-): [boolean, Dispatch<SetStateAction<boolean>>] {
-  const [clickSelectedBox, setClickSelectedBox] = useState(false);
+export function useSelect<T extends HTMLElement>() {
+  const labelRef = useRef<T>(null);
+  const [isClicked, setClicked] = useState(false);
 
   useEffect(() => {
     const handleSelect = (e: MouseEvent) => {
       if (!e.target) return;
 
-      if (!selectBox.current?.contains(e.target as HTMLElement)) {
-        setClickSelectedBox(false);
+      if (!labelRef.current?.contains(e.target as HTMLElement)) {
+        setClicked(false);
       }
     };
     document.addEventListener('click', handleSelect);
     return () => document.removeEventListener('click', handleSelect);
-  }, [selectBox]);
-  return [clickSelectedBox, setClickSelectedBox];
+  }, [labelRef]);
+  return { isClicked, setClicked, labelRef };
 }

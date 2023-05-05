@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { DefaultData } from 'src/types/prop';
+import { DefaultData, StyleProps } from 'src/types/prop';
 
 import $ from './style.module.scss';
 import { useSelect } from './hooks';
@@ -10,12 +9,14 @@ type Props<T> = {
   selected: DefaultData['id'][];
   onChange?: (value: T) => void;
   name: string;
-};
+  direction?: 'left' | 'right';
+} & StyleProps;
 
 function CheckMenuList<T extends DefaultData['id']>(props: Props<T>) {
-  const { name, options, selected, onChange } = props;
-  const labelRef = useRef<HTMLButtonElement>(null);
-  const [isClicked, setIsClicked] = useSelect(labelRef);
+  const { name, options, selected, onChange, className, direction } = props;
+  const right = direction === 'right' ? 0 : undefined;
+  const left = direction === 'left' ? 0 : undefined;
+  const { isClicked, setClicked, labelRef } = useSelect<HTMLButtonElement>();
   const labelIds = getSelectedMenus(options, selected);
   const isSelected = (optionId: DefaultData['id']) =>
     labelIds.includes(optionId);
@@ -24,7 +25,7 @@ function CheckMenuList<T extends DefaultData['id']>(props: Props<T>) {
     e: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
   ) => {
     e.preventDefault();
-    setIsClicked((clicked) => !clicked);
+    setClicked((clicked) => !clicked);
   };
 
   const handleSelectItem = (option: DefaultData['id']) => () => {
@@ -32,7 +33,7 @@ function CheckMenuList<T extends DefaultData['id']>(props: Props<T>) {
   };
 
   return (
-    <div className={$['select-box']}>
+    <div className={`${$['select-box']} ${className}`}>
       <button
         id={`${name}-select-box`}
         type="button"
@@ -51,6 +52,7 @@ function CheckMenuList<T extends DefaultData['id']>(props: Props<T>) {
           aria-labelledby={`${name}-select-box`}
           role="menu"
           tabIndex={0}
+          style={{ right, left }}
           className={$['select-wrapper']}
         >
           {options.map(({ name, id }) => (
