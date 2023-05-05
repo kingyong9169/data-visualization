@@ -1,34 +1,28 @@
-import { useGetSpotInfos } from 'src/hooks/api/useGetSpotInfo';
-import { memo } from 'react';
-import { styles } from 'src/constants/chartStyles';
+import { SpotKind, useGetSpotInfos } from 'src/hooks/api/useGetSpotInfo';
+import { memo, useState } from 'react';
 
-import BarChart from '../shared/BarChart';
-import ErrorFallback from '../shared/ErrorFallback';
-import LoadingSpinner from '../shared/LoadingSpinner';
+import WidgetTemplate from '../shared/WidgetTemplate';
 
-import $ from './style.module.scss';
+import { spotMethodData, spotMethodList } from './constants';
 
 function SpotMethodInfo() {
-  const { data, isLoading, error, reset } = useGetSpotInfos([
-    'act_method',
-    'act_sql',
-    'act_httpc',
-    'act_dbc',
-    'act_socket',
-  ]);
+  const [apis, setApis] = useState<SpotKind[]>(spotMethodList);
+  const { data, isLoading, error, reset } = useGetSpotInfos(apis);
 
   const spotDatas = data.map((data) =>
     data ? data : { key: '', name: '', data: 0 },
   );
 
   return (
-    <div className={$['container']}>
-      {isLoading && <LoadingSpinner />}
-      {error && <ErrorFallback message={error.message} reset={reset} />}
-      {!isLoading && !error && (
-        <BarChart datas={spotDatas} styles={styles} ticks={5} />
-      )}
-    </div>
+    <WidgetTemplate
+      title="메소드 정보"
+      chartType="bar"
+      datas={spotDatas}
+      apiOptions={spotMethodData}
+      apis={apis}
+      setApis={setApis}
+      {...{ isLoading, error, reset }}
+    />
   );
 }
 
