@@ -20,6 +20,7 @@ function SpotInfo() {
       setApis={setSpotApis}
       apiOptions={spotApiData}
       datas={spotDatas}
+      chartType="infomatics"
       {...{ isLoading, error, reset }}
     />
   );

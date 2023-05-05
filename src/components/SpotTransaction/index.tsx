@@ -16,6 +16,7 @@ function SpotTransaction() {
   return (
     <WidgetTemplate
       title="트랜잭션 정보"
+      chartType="infomatics"
       datas={spotDatas}
       apiOptions={spotTransactionData}
       apis={apis}
