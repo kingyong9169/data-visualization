@@ -13,7 +13,7 @@ type SpotMethodKind =
   | 'act_dbc'
   | 'act_socket';
 
-type SpotKind =
+export type SpotKind =
   | SpotBasicKind
   | SpotTransactionKind
   | SpotDBCKind
