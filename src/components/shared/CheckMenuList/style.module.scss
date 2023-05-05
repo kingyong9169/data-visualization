@@ -20,6 +20,8 @@
   position: absolute;
   top: 36px;
   width: fit-content;
+  box-sizing: border-box;
+  border: 1px solid $grey-300;
   border-radius: $border-radius;
   background-color: $white;
 

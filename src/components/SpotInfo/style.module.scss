@@ -1,0 +1,16 @@
+.container {
+  width: 100%;
+  display: grid;
+  padding: $chart-padding;
+  border: 1px solid $grey-400;
+  border-radius: 4px;
+  box-shadow: $box-shadow;
+  background-color: $white;
+}
+
+.header {
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
