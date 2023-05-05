@@ -1,29 +1,27 @@
-import { useGetSpotInfos } from 'src/hooks/api/useGetSpotInfo';
-import { memo } from 'react';
+import { SpotKind, useGetSpotInfos } from 'src/hooks/api/useGetSpotInfo';
+import { memo, useState } from 'react';
 
-import Infomatics from '../shared/Infomatics';
-import ErrorFallback from '../shared/ErrorFallback';
-import LoadingSpinner from '../shared/LoadingSpinner';
+import WidgetTemplate from '../shared/WidgetTemplate';
+
+import { spotTransactionData, spotTransactionList } from './constants';
 
 function SpotTransaction() {
-  const { data, isLoading, error, reset } = useGetSpotInfos([
-    'txcount',
-    'tps',
-    'user',
-    'actx',
-    'rtime',
-  ]);
+  const [apis, setApis] = useState<SpotKind[]>(spotTransactionList);
+  const { data, isLoading, error, reset } = useGetSpotInfos(apis);
 
   const spotDatas = data.map((data) =>
     data ? data : { key: '', name: '', data: 0 },
   );
 
   return (
-    <>
-      {isLoading && <LoadingSpinner />}
-      {error && <ErrorFallback message={error.message} reset={reset} />}
-      {!isLoading && !error && <Infomatics datas={spotDatas} />}
-    </>
+    <WidgetTemplate
+      title="트랜잭션 정보"
+      datas={spotDatas}
+      apiOptions={spotTransactionData}
+      apis={apis}
+      setApis={setApis}
+      {...{ isLoading, error, reset }}
+    />
   );
 }
 

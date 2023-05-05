@@ -15,6 +15,7 @@ function SpotInfo() {
 
   return (
     <WidgetTemplate
+      title="애플리케이션 기본 정보"
       apis={spotApis}
       setApis={setSpotApis}
       apiOptions={spotApiData}

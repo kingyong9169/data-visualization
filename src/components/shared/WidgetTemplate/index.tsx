@@ -10,6 +10,7 @@ import SubTitle from '../SubTitle';
 import $ from './style.module.scss';
 
 type Props<T> = {
+  title: string;
   apiOptions: DefaultData[];
   apis: T[];
   setApis: React.Dispatch<React.SetStateAction<T[]>>;
@@ -21,7 +22,7 @@ type Props<T> = {
 
 function WidgetTemplate<T extends string>(props: Props<T>) {
   const { apiOptions, datas, isLoading, error, reset } = props;
-  const { apis, setApis } = props;
+  const { title, apis, setApis } = props;
 
   const handleChange = (value: T) => {
     setApis((state) => {
@@ -33,7 +34,7 @@ function WidgetTemplate<T extends string>(props: Props<T>) {
   return (
     <div className={$['container']}>
       <header className={$['header']}>
-        <SubTitle text="애플리케이션 기본 정보" />
+        <SubTitle text={title} />
         <CheckMenuList
           options={apiOptions}
           selected={apis}
