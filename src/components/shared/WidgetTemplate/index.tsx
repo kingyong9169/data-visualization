@@ -1,4 +1,5 @@
 import { DefaultData } from 'src/types/prop';
+import { styles } from 'src/constants/chartStyles';
 
 import LoadingSpinner from '../LoadingSpinner';
 import ErrorFallback from '../ErrorFallback';
@@ -6,6 +7,7 @@ import Infomatics from '../Infomatics';
 import { Setting } from '../icons/Setting';
 import CheckMenuList from '../CheckMenuList';
 import SubTitle from '../SubTitle';
+import BarChart from '../BarChart';
 
 import $ from './style.module.scss';
 
@@ -18,11 +20,13 @@ type Props<T> = {
   isLoading: boolean;
   error: Error | null;
   reset: () => void;
+  chartType: 'infomatics' | 'bar';
+  barChartTicks?: number;
 };
 
 function WidgetTemplate<T extends string>(props: Props<T>) {
   const { apiOptions, datas, isLoading, error, reset } = props;
-  const { title, apis, setApis } = props;
+  const { title, apis, setApis, chartType, barChartTicks } = props;
 
   const handleChange = (value: T) => {
     setApis((state) => {
@@ -47,7 +51,13 @@ function WidgetTemplate<T extends string>(props: Props<T>) {
 
       {isLoading && <LoadingSpinner />}
       {error && <ErrorFallback message={error.message} reset={reset} />}
-      {!isLoading && !error && <Infomatics datas={datas} />}
+      {!isLoading &&
+        !error &&
+        (chartType === 'infomatics' ? (
+          <Infomatics datas={datas} />
+        ) : (
+          <BarChart datas={datas} styles={styles} ticks={barChartTicks || 0} />
+        ))}
     </div>
   );
 }
