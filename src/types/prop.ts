@@ -13,3 +13,10 @@ export type DefaultData = {
   id: string;
   name: string;
 };
+
+export type IconProps = {
+  size: number;
+  fill?: string;
+  stroke?: string;
+  style?: React.CSSProperties;
+};
