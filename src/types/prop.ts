@@ -8,3 +8,8 @@ export type StyleProps = {
 export type DefaultProps = {
   children?: ReactNode;
 } & StyleProps;
+
+export type DefaultData = {
+  id: string;
+  name: string;
+};
