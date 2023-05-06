@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { useTimeRangeInput } from 'src/hooks/useTimeRangeInput';
+import useGetAgentThread from 'src/hooks/api/useGetAgentThread';
 
 import LineGraphTemplate from '../shared/LineGraphTemplate';
 import Select from '../shared/Select';
@@ -12,17 +13,11 @@ import { refinedData } from './helpers';
 function AgentThread() {
   const { start, end, startDate, endDate, handleTimeChange } =
     useTimeRangeInput();
-  const {
-    threadType,
-    kind,
-    handleThreadKind,
-    handleThreadType,
-    data,
-    isLoading,
-    error,
-    reset,
-    title,
-  } = useAgentThread({ sTime: startDate, eTime: endDate });
+  const { type, kind, handleKind, handleType, title } = useAgentThread();
+  const { data, isLoading, error, reset } = useGetAgentThread(type, kind, {
+    sTime: startDate,
+    eTime: endDate,
+  });
   const datas = refinedData(data);
 
   return (
@@ -30,12 +25,12 @@ function AgentThread() {
       <Select
         datas={threadKindDatas}
         currentValue={kind}
-        handleChange={handleThreadKind}
+        handleChange={handleKind}
       />
       <Select
         datas={threadTypeDatas}
-        currentValue={threadType}
-        handleChange={handleThreadType}
+        currentValue={type}
+        handleChange={handleType}
       />
       <TimeRangeInput {...{ start, end }} onChange={handleTimeChange} />
     </LineGraphTemplate>

@@ -1,33 +1,29 @@
 import React, { useState } from 'react';
-import useGetAgentThread from 'src/hooks/api/useGetAgentThread';
-import { AsyncTimeParams } from 'src/types/async';
 
 import { threadKindDatas, threadTypeDatas } from './constants';
 
 export type AgentKind = 'avg' | '';
 
-export function useAgentThread(time: AsyncTimeParams) {
-  const [threadType, setThreadType] = useState('thread_count');
+export function useAgentThread() {
+  const [type, setType] = useState('thread_count');
   const [kind, setKind] = useState<AgentKind>('');
-  const datas = useGetAgentThread(threadType, kind, time);
   const typeTitle =
-    threadTypeDatas.find(({ value }) => value === threadType)?.name ||
+    threadTypeDatas.find(({ value }) => value === type)?.name ||
     threadTypeDatas[0].name;
   const kindTitle =
     threadKindDatas.find(({ value }) => value === kind)?.name ||
     threadKindDatas[0].name;
 
-  const handleThreadType = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setThreadType(e.target.value);
-  const handleThreadKind = (e: React.ChangeEvent<HTMLSelectElement>) =>
+  const handleType = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setType(e.target.value);
+  const handleKind = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setKind(e.target.value as AgentKind);
 
   return {
-    threadType,
+    type,
     kind,
-    handleThreadKind,
-    handleThreadType,
+    handleKind,
+    handleType,
     title: `${kindTitle} ${typeTitle}`,
-    ...datas,
   };
 }
