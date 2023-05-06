@@ -48,16 +48,20 @@ const OPEN_API: OpenAPIObj = {
     'exception/{stime}/{etime}': 'Exception 발생 ',
     'heap_use/{stime}/{etime}/avg': '평균 Heap 사용량',
     'heap_use/{stime}/{etime}/max': '최대 Heap 사용량',
-    'thread_count/{stime}/{etime}': '데이터 개별 쓰레드 개수',
-    'thread_count/{stime}/{etime}/avg': '데이터 평균 쓰레드 개수',
-    'thread_daemon/{stime}/{etime}': '데이터 개별 쓰레드 대몬 개수',
-    'thread_daemon/{stime}/{etime}/avg': '데이터 평균 쓰레드 대몬 개수',
-    'thread_peak_count/{stime}/{etime}': '데이터 개별 쓰레드 피크 개수',
-    'thread_peak_count/{stime}/{etime}/avg': '데이터 평균 쓰레드 피크 개수',
-    'threadpool_active/{stime}/{etime}': '데이터 개별 활성 쓰레드풀 개수',
-    'threadpool_active/{stime}/{etime}/avg': '데이터 평균 활성 쓰레드풀 개수',
-    'threadpool_queue/{stime}/{etime}': '데이터 개별 쓰레드풀 큐 개수',
-    'threadpool_queue/{stime}/{etime}/avg': '데이터 평균 쓰레드풀 큐 개수',
+    'thread_count/{stime}/{etime}/{oids}': '데이터 개별 쓰레드 개수',
+    'thread_count/{stime}/{etime}/avg/{oids}': '데이터 평균 쓰레드 개수',
+    'thread_daemon/{stime}/{etime}/{oids}': '데이터 개별 쓰레드 대몬 개수',
+    'thread_daemon/{stime}/{etime}/avg/{oids}': '데이터 평균 쓰레드 대몬 개수',
+    'thread_peak_count/{stime}/{etime}/{oids}': '데이터 개별 쓰레드 피크 개수',
+    'thread_peak_count/{stime}/{etime}/avg/{oids}':
+      '데이터 평균 쓰레드 피크 개수',
+    'threadpool_active/{stime}/{etime}/{oids}':
+      '데이터 개별 활성 쓰레드풀 개수',
+    'threadpool_active/{stime}/{etime}/avg/{oids}':
+      '데이터 평균 활성 쓰레드풀 개수',
+    'threadpool_queue/{stime}/{etime}/{oids}': '데이터 개별 쓰레드풀 큐 개수',
+    'threadpool_queue/{stime}/{etime}/avg/{oids}':
+      '데이터 평균 쓰레드풀 큐 개수',
     agents: '에이전트 목록',
   },
   raw: {

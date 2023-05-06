@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import {
+  useAgentListAction,
+  useAgentListValue,
+} from '../AgentList/AgentListProvider';
 
 import { threadKindDatas, threadTypeDatas } from './constants';
+import { refineAgentList } from './helpers';
 
 export type AgentKind = 'avg' | '';
 
@@ -26,4 +32,21 @@ export function useAgentThread() {
     handleType,
     title: `${kindTitle} ${typeTitle}`,
   };
+}
+
+export function useOids() {
+  const { agents } = useAgentListValue();
+  return agents.map(({ oid }) => oid).join(',');
+}
+
+export function useAgentListData(
+  data: res.Success<res.AverageAgent> | res.Success<res.IndividualAgent> | null,
+) {
+  const agentDatas = refineAgentList(data);
+  const { agentList } = useAgentListValue();
+  const { setAgentList } = useAgentListAction();
+
+  useEffect(() => {
+    if (data && !agentList.length) setAgentList(agentDatas);
+  }, [data]);
 }

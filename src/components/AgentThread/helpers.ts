@@ -12,3 +12,12 @@ export function refinedData(
     ? [data.data.series]
     : data.data.objects.map(({ series }) => series);
 }
+
+export function refineAgentList(
+  data: res.Success<res.AverageAgent> | res.Success<res.IndividualAgent> | null,
+): { oid: number; oname: string }[] | [] {
+  if (!data) return [];
+  return isAvgThreadData(data)
+    ? []
+    : data.data.objects.map(({ oid, oname }) => ({ oid, oname }));
+}

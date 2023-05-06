@@ -7,17 +7,20 @@ import Select from '../shared/Select';
 import TimeRangeInput from '../shared/TimeRangeInput';
 
 import { threadKindDatas, threadTypeDatas } from './constants';
-import { useAgentThread } from './hooks';
+import { useOids, useAgentThread, useAgentListData } from './hooks';
 import { refinedData } from './helpers';
 
 function AgentThread() {
   const { start, end, startDate, endDate, handleTimeChange } =
     useTimeRangeInput();
   const { type, kind, handleKind, handleType, title } = useAgentThread();
+  const oids = useOids();
   const { data, isLoading, error, reset } = useGetAgentThread(type, kind, {
     sTime: startDate,
     eTime: endDate,
+    oids,
   });
+  useAgentListData(data);
   const datas = refinedData(data);
 
   return (
