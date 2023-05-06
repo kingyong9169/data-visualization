@@ -1,3 +1,5 @@
+import { QueryItem } from 'src/store/ApiRequestPollingContext';
+
 export type InitialState<D, E> = {
   isLoading: boolean;
   isFetching: boolean;
@@ -38,3 +40,15 @@ export type ReducerFn<D, E> = (
   states: InitialState<D, E>,
   action: InitialAction<D, E>,
 ) => InitialState<D, E>;
+
+export type AsyncInfo = QueryItem & {
+  needStime?: boolean;
+  needEtime?: boolean;
+  term?: number;
+};
+
+export type AsyncOptions<D, E> = {
+  select?: (state: InitialState<D, E>['data'], data: D) => D;
+  lastEtime?: (state: InitialState<D, E>['data']) => number;
+  skip?: boolean;
+};
