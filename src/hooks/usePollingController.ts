@@ -46,11 +46,11 @@ export default function usePollingController() {
       slicedQueue.forEach(async (requestInfo) => {
         // TODO: 원본 데이터 오염의 가능성이 있다. 이를 방지할 로직이 있는지 -> 함수형
         // TODO: readonly를 지정해서 오염 방지할수도
-        const { type, key, param, onSuccess, onError } = requestInfo;
+        const { type, key, param, onSuccess, onError, apiKind } = requestInfo;
         try {
           removeFromQueue('progress', requestInfo); // TODO: 얘 땜에 사이드 이펙트 생길 수 있음
           setActiveRequestNum((num) => num + 1);
-          const res = await getOpenApi(type)(key, param);
+          const res = await getOpenApi(type, apiKind)(key, param);
           onSuccess(res);
         } catch (e) {
           onError(e);

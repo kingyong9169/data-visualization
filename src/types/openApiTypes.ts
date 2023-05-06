@@ -8,6 +8,7 @@ export type OpenAPIHeaders = {
   'x-whatap-token': string;
 };
 
+export type ApiKind = 'open' | 'server';
 export type OpenAPIType = '' | 'json' | 'raw';
 export type OpenAPIParamType = 'stime' | 'etime';
 

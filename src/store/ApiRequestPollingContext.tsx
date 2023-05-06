@@ -8,10 +8,11 @@ import {
   useState,
 } from 'react';
 import { ApiRequest } from 'src/api';
-import { OpenAPIType } from 'src/types/openApiTypes';
+import { ApiKind, OpenAPIType } from 'src/types/openApiTypes';
 
 export type QueryItem = ApiRequest & {
   type: OpenAPIType;
+  apiKind?: ApiKind;
 };
 
 export type QueueRequestObj = QueryItem & {

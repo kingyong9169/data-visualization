@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import {
+  ApiKind,
   OpenAPIHeaders,
   OpenAPIObj,
   OpenAPIParamType,
@@ -16,6 +17,7 @@ const OPEN_API_HEADERS: OpenAPIHeaders = {
 };
 
 const OPEN_API_ROOT = 'https://api.whatap.io/open/api';
+const SERVER_API_ROOT = 'https://service.whatap.io/open';
 
 const OPEN_API: OpenAPIObj = {
   '': {
@@ -56,6 +58,7 @@ const OPEN_API: OpenAPIObj = {
     'threadpool_active/{stime}/{etime}/avg': '데이터 평균 활성 쓰레드풀 개수',
     'threadpool_queue/{stime}/{etime}': '데이터 개별 쓰레드풀 큐 개수',
     'threadpool_queue/{stime}/{etime}/avg': '데이터 평균 쓰레드풀 큐 개수',
+    sm_servers: '에이전트 목록',
   },
   raw: {
     'tag/app_counter/tps?stime={stime}&etime={etime}&timeMerge=avg': 'TPS(개)',
@@ -90,12 +93,13 @@ export type ApiRequest = {
 };
 
 export const getOpenApi =
-  (type: OpenAPIType) =>
+  (type: OpenAPIType, apiKind: ApiKind = 'open') =>
   async <T>(key: string, param?: OpenAPIParams) => {
+    const apiRoot = apiKind === 'open' ? OPEN_API_ROOT : SERVER_API_ROOT;
     const apiInfo = new Promise<ParsedOpenAPIInfo>((resolve, reject) => {
       if (key in OPEN_API[type]) {
         return resolve({
-          url: [OPEN_API_ROOT, type, key].filter((path) => !!path).join('/'),
+          url: [apiRoot, type, key].filter((path) => !!path).join('/'),
           name: OPEN_API[type][key],
         });
       } else {

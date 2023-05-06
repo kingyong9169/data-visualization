@@ -31,7 +31,7 @@ export default function useAsync<D, E extends Error = Error>(
     if (isChange) {
       dispatch({ type: 'LOADING' });
     } else dispatch({ type: 'FETCHING' });
-    const { type, key, needStime, needEtime, term } = queueItem;
+    const { type, apiKind, key, needStime, needEtime, term } = queueItem;
     const time = { sTime: queueItem.sTime, eTime: queueItem.eTime };
     const isTimeExists = isTimeExist(time);
     const lastTime = (lastEtime && !isChange && lastEtime(state.data)) || 0;
@@ -40,6 +40,7 @@ export default function useAsync<D, E extends Error = Error>(
 
     queueRequest({
       type,
+      apiKind,
       key,
       param: {
         stime: isTimeExists ? time.sTime : stime,
