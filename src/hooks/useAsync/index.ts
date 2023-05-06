@@ -1,5 +1,6 @@
 import { useReducer, useEffect, useCallback } from 'react';
 import { useApiPollingAction } from 'src/store/ApiRequestPollingContext';
+import { isTimeExist } from 'src/utils/isTimeExist';
 
 import { useRequestTimer } from '../useRequestTimer';
 
@@ -30,6 +31,8 @@ export default function useAsync<D, E extends Error = Error>(
       dispatch({ type: 'LOADING' });
     } else dispatch({ type: 'FETCHING' });
     const { type, key, needStime, needEtime, term } = queueItem;
+    const time = { sTime: queueItem.sTime, eTime: queueItem.eTime };
+    const isTimeExists = isTimeExist(time);
     const lastTime = (lastEtime && !isChange && lastEtime(state.data)) || 0;
     const stime: number = needStime && term ? lastTime || Date.now() - term : 0;
     const etime: number = needEtime ? Date.now() : 0;
@@ -37,7 +40,10 @@ export default function useAsync<D, E extends Error = Error>(
     queueRequest({
       type,
       key,
-      param: { stime, etime },
+      param: {
+        stime: isTimeExists ? time.sTime : stime,
+        etime: isTimeExists ? time.eTime : etime,
+      },
       onSuccess: (data: D) =>
         dispatch({
           type: 'SUCCESS',
@@ -57,7 +63,11 @@ export default function useAsync<D, E extends Error = Error>(
   }, [...deps, state.data, state.error]);
 
   useRequestTimer([...deps, state.data, state.error], makeRequest, {
-    dismissCondition: skip || !state.data || !!state.error,
+    dismissCondition:
+      skip ||
+      !state.data ||
+      !!state.error ||
+      isTimeExist({ sTime: queueItem.sTime, eTime: queueItem.eTime }),
   });
 
   return {

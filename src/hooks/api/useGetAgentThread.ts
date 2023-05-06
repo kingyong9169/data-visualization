@@ -1,6 +1,8 @@
 import { asyncKeys } from 'src/constants/asyncKeys';
 import { HOUR } from 'src/constants/time';
 import { AgentKind } from 'src/components/AgentThread/hooks';
+import { AsyncTimeParams } from 'src/types/async';
+import { getTimeDeps } from 'src/utils/isTimeExist';
 
 import useAsync from '../useAsync';
 
@@ -10,19 +12,25 @@ function isAvgData(
   return !!(data as res.Success<res.AverageAgent>).data.objectMerge;
 }
 
-function useGetAgentThread(type: string, kind?: AgentKind) {
+function useGetAgentThread(
+  type: string,
+  kind?: AgentKind,
+  time: AsyncTimeParams = {},
+) {
   const refinedKind = kind === 'avg' ? `/${kind}` : '';
   const key = `${type}/{stime}/{etime}${refinedKind}`;
   return useAsync<
     res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>
   >(
-    asyncKeys.agentThread(type, kind || ''),
+    asyncKeys.agentThread(type, kind || '', getTimeDeps(time)),
     {
       type: 'json',
       key,
       needStime: true,
       needEtime: true,
       term: HOUR,
+      sTime: time.sTime,
+      eTime: time.eTime,
     },
     {
       lastEtime: (state) => {

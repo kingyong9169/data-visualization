@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import useGetAgentThread from 'src/hooks/api/useGetAgentThread';
+import { AsyncTimeParams } from 'src/types/async';
 
 import { threadKindDatas, threadTypeDatas } from './constants';
 
 export type AgentKind = 'avg' | '';
 
-export function useAgentThread() {
+export function useAgentThread(time: AsyncTimeParams) {
   const [threadType, setThreadType] = useState('thread_count');
   const [kind, setKind] = useState<AgentKind>('');
-  const datas = useGetAgentThread(threadType, kind);
+  const datas = useGetAgentThread(threadType, kind, time);
   const typeTitle =
     threadTypeDatas.find(({ value }) => value === threadType)?.name ||
     threadTypeDatas[0].name;

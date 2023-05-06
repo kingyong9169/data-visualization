@@ -1,12 +1,14 @@
 import { timeFormat } from 'd3';
 import { memo } from 'react';
 import { styles } from 'src/constants/chartStyles';
+import { useTimeRangeInput } from 'src/hooks/useTimeRangeInput';
 
 import SubTitle from '../shared/SubTitle';
 import Select from '../shared/Select';
 import LineChart from '../shared/LineChart';
 import ErrorFallback from '../shared/ErrorFallback';
 import LoadingSpinner from '../shared/LoadingSpinner';
+import TimeRangeInput from '../shared/TimeRangeInput';
 
 import $ from './style.module.scss';
 import { threadKindDatas, threadTypeDatas } from './constants';
@@ -14,6 +16,8 @@ import { useAgentThread } from './hooks';
 import { refinedData } from './helpers';
 
 function AgentThread() {
+  const { start, end, startDate, endDate, handleTimeChange } =
+    useTimeRangeInput();
   const {
     threadType,
     kind,
@@ -24,7 +28,7 @@ function AgentThread() {
     error,
     reset,
     title,
-  } = useAgentThread();
+  } = useAgentThread({ sTime: startDate, eTime: endDate });
   const datas = refinedData(data);
 
   return (
@@ -40,6 +44,8 @@ function AgentThread() {
         currentValue={threadType}
         handleChange={handleThreadType}
       />
+      <TimeRangeInput {...{ start, end }} onChange={handleTimeChange} />
+
       {isLoading && <LoadingSpinner />}
       {error && <ErrorFallback message={error.message} reset={reset} />}
       {!isLoading && !error && (

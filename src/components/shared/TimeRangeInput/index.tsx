@@ -25,7 +25,7 @@ function TimeRangeInput({ start, end, onChange }: Props) {
           onChange={onChange('start', 'time')}
         />
       </div>
-      <text className={$['range']}>~</text>
+      <span className={$['range']}>~</span>
       <div className={$['end-input']}>
         <input
           type="date"
