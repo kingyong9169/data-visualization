@@ -1,7 +1,14 @@
+.root {
+  display: flex;
+  .content {
+    width: 100%;
+    padding: 8px;
+  }
+}
+
 .container {
   display: grid;
   gap: 8px;
-  padding: 8px;
 
   @include pc() {
     grid-template-columns: repeat(3, 1fr);
