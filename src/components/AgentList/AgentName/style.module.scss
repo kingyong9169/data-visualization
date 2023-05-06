@@ -1,0 +1,24 @@
+.name {
+  width: fit-content;
+  height: 20px;
+  display: inline-flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 6px;
+  border-radius: 4px;
+  background: $white;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+
+  &-clicked {
+    border: 1px solid $blue-100;
+    color: $blue-100;
+  }
+
+  &:hover {
+    background-color: $grey-400;
+  }
+}
