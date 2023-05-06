@@ -20,4 +20,13 @@ declare namespace res {
 
   type AverageAgentData = { series: AgentData[]; objectMerge: string };
   type AverageAgent = AgentCommon & AverageAgentData;
+
+  type AgentListItem = {
+    host_ip: string;
+    oname: string;
+    active: boolean;
+  };
+  type AgentList = {
+    data: AgentListItem[];
+  };
 }
