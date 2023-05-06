@@ -1,9 +1,10 @@
 import { useReducer, useEffect, useCallback } from 'react';
 import { useApiPollingAction } from 'src/store/ApiRequestPollingContext';
+import { AsyncInfo } from 'src/types/async';
 
 import { useRequestTimer } from '../useRequestTimer';
 
-import { AsyncInfo, AsyncInfoWithId, AsyncOptions, ReducerFn } from './type';
+import { AsyncInfoWithId, AsyncOptions, ReducerFn } from './type';
 import { reducer } from './reducer';
 import { getInitialArr } from './utils';
 import { errorHappenedData, setData, setBools } from './helpers';

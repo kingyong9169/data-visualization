@@ -1,10 +1,11 @@
 import { useReducer, useEffect, useCallback } from 'react';
 import { useApiPollingAction } from 'src/store/ApiRequestPollingContext';
 import { isTimeExist } from 'src/utils/isTimeExist';
+import { AsyncInfo } from 'src/types/async';
 
 import { useRequestTimer } from '../useRequestTimer';
 
-import { AsyncInfo, AsyncOptions, ReducerFn } from './type';
+import { AsyncOptions, ReducerFn } from './type';
 import { reducer } from './reducer';
 
 // TODO: 요청 파라미터 캐싱

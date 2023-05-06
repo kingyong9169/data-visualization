@@ -1,4 +1,4 @@
-import { QueryItem } from 'src/store/ApiRequestPollingContext';
+import { AsyncInfo } from 'src/types/async';
 
 export type InitialState<D, E> = {
   loading: boolean[];
@@ -63,12 +63,6 @@ export type ReducerFn<D, E> = (
   states: InitialState<D, E>,
   action: InitialAction<D, E>,
 ) => InitialState<D, E>;
-
-export type AsyncInfo = QueryItem & {
-  needStime?: boolean;
-  needEtime?: boolean;
-  term?: number;
-};
 
 export type AsyncInfoWithId = AsyncInfo & {
   idx: number;
