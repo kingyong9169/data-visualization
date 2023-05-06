@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type Time = {
   date: string;
@@ -13,6 +13,8 @@ export type HandleTime = (
 export function useTimeRangeInput() {
   const [start, setStart] = useState<Time>({ date: '', time: '' });
   const [end, setEnd] = useState<Time>({ date: '', time: '' });
+  const [startDate, setStartDate] = useState<number>(0);
+  const [endDate, setEndDate] = useState<number>(0);
 
   const handleTimeChange: HandleTime =
     (key: 'start' | 'end', type: 'date' | 'time') =>
@@ -21,9 +23,19 @@ export function useTimeRangeInput() {
       setState((prev) => ({ ...prev, [type]: e.target.value }));
     };
 
+  useEffect(() => {
+    setStartDate(Number(new Date(`${start.date} ${start.time}`)));
+  }, [start]);
+
+  useEffect(() => {
+    setEndDate(Number(new Date(`${end.date} ${end.time}`)));
+  }, [end]);
+
   return {
     start,
     end,
+    startDate,
+    endDate,
     handleTimeChange,
   };
 }
