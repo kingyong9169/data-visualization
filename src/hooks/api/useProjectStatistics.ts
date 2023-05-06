@@ -17,7 +17,6 @@ function useProjectStatistics(type: StatisticsType, kind: StatisticsKind) {
   return useAsync<res.Success<res.ProjectBasic>>(
     asyncKeys.projectStatistics(type, kind),
     {
-      id: Math.random(),
       type: refinedType,
       key,
       needStime: true,

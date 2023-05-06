@@ -45,14 +45,13 @@ export default function useAsyncs<D, E extends Error = Error>(
     isChange?: boolean,
   ) => {
     return itemList.map((queueItem) => {
-      const { id, idx, type, key, needStime, needEtime, term } = queueItem;
+      const { idx, type, key, needStime, needEtime, term } = queueItem;
       const lastTime =
         (lastEtime && !isChange && lastEtime(state.data[idx])) || 0;
       const stime: number =
         needStime && term ? lastTime || Date.now() - term : 0;
       const etime: number = needEtime ? Date.now() : 0;
       return {
-        id,
         type,
         key,
         param: { stime, etime },

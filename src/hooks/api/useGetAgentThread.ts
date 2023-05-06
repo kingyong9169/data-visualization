@@ -18,7 +18,6 @@ function useGetAgentThread(type: string, kind?: AgentKind) {
   >(
     asyncKeys.agentThread(type, kind || ''),
     {
-      id: Math.random(),
       type: 'json',
       key,
       needStime: true,

@@ -21,7 +21,6 @@ export type SpotKind =
 
 function useGetSpotInfo(url: SpotKind) {
   return useAsync<res.Success<res.Spot>>(asyncKeys.spot(url), {
-    id: Math.random(),
     type: '',
     key: url,
   });
@@ -31,7 +30,6 @@ export function useGetSpotInfos(urls: SpotKind[]) {
   return useAsyncs<res.Success<res.Spot>>(
     asyncKeys.spots(urls),
     urls.map((url) => ({
-      id: Math.random(),
       type: '',
       key: url,
     })),
