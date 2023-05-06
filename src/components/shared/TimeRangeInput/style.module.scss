@@ -1,0 +1,26 @@
+.time-range-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $grey-400;
+  border-radius: 3px;
+}
+
+.start-input,
+.end-input {
+  margin-bottom: 5px;
+  padding: 5px 15px;
+}
+
+.range {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.input {
+  font-weight: 600;
+  &:focus {
+    font-weight: 800;
+    color: $blue-100;
+  }
+}
