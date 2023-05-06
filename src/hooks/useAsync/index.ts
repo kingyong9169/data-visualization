@@ -15,7 +15,7 @@ export default function useAsync<D, E extends Error = Error>(
   queueItem: AsyncInfo,
   options: AsyncOptions<D, E> = {},
 ) {
-  const { select, lastEtime, skip } = options;
+  const { select, lastEtime, skip, timeSkip } = options;
   const { queueRequest } = useApiPollingAction();
 
   const [state, dispatch] = useReducer<ReducerFn<D, E>>(reducer, {
@@ -67,6 +67,7 @@ export default function useAsync<D, E extends Error = Error>(
   useRequestTimer([...deps, state.data, state.error], makeRequest, {
     dismissCondition:
       skip ||
+      timeSkip ||
       !state.data ||
       !!state.error ||
       isTimeExist({ sTime: queueItem.sTime, eTime: queueItem.eTime }),

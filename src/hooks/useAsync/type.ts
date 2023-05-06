@@ -43,4 +43,5 @@ export type AsyncOptions<D, E> = {
   select?: (state: InitialState<D, E>['data'], data: D) => D;
   lastEtime?: (state: InitialState<D, E>['data']) => number;
   skip?: boolean;
+  timeSkip?: boolean;
 };
