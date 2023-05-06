@@ -10,4 +10,5 @@ export type AsyncInfo = QueryItem &
     needStime?: boolean;
     needEtime?: boolean;
     term?: number;
+    params?: Record<string, string | number>;
   };

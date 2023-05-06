@@ -15,22 +15,24 @@ function isAvgData(
 function useGetAgentThread(
   type: string,
   kind?: AgentKind,
-  time: AsyncTimeParams = {},
+  params: AsyncTimeParams & { oids?: string } = {},
 ) {
   const refinedKind = kind === 'avg' ? `/${kind}` : '';
-  const key = `${type}/{stime}/{etime}${refinedKind}`;
+  const key = `${type}/{stime}/{etime}${refinedKind}/{oids}`;
+  const oids = params.oids || '';
   return useAsync<
     res.Success<res.AverageAgent> | res.Success<res.IndividualAgent>
   >(
-    asyncKeys.agentThread(type, kind || '', getTimeDeps(time)),
+    asyncKeys.agentThread(type, kind || '', oids + getTimeDeps(params)),
     {
       type: 'json',
       key,
       needStime: true,
       needEtime: true,
       term: HOUR,
-      sTime: time.sTime,
-      eTime: time.eTime,
+      sTime: params.sTime,
+      eTime: params.eTime,
+      params: { oids },
     },
     {
       lastEtime: (state) => {
