@@ -11,7 +11,6 @@ import { ApiRequest } from 'src/api';
 import { OpenAPIType } from 'src/types/openApiTypes';
 
 export type QueryItem = ApiRequest & {
-  id: number;
   type: OpenAPIType;
 };
 
@@ -75,19 +74,15 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
 
   const removeFromQueueCallback = useCallback(
     (requestInfo: QueueRequestObj) => (queue: QueueRequestObj[]) => {
-      const index = queue.findIndex((item) => item.id === requestInfo.id); // TODO: o(1)로 바꾸기
-      const frontArr = queue.slice(0, index);
-      const backArr = queue.slice(index + 1);
-      return index > -1 ? [...frontArr, ...backArr] : queue;
+      const index = queue.findIndex((item) => item.key === requestInfo.key); // TODO: o(1)로 바꾸기
+      return index > -1 ? queue.filter((_, idx) => idx !== index) : queue;
     },
     [],
   );
 
-  // 우선순위큐 만들고 id 별로 obj를 만들고, 안에 []를 만들어서 하나씩 빼준다.
-  // 인덱스 타워??
-  // 각 요청에 대한 boolean의 json 자료구조를 만들어서 관리
+  // 각 요청에 대한 인덱스에 boolean을 넣은 배열을 만들어서 관리
   // true면 건너뛰고
-  // 마지막에 한 번에 filter로 정리
+  // 큐에 100개가 들어오면 한 번에 filter로 정리
   // pointer 상태로 최근 요청 가리키기
 
   const actions = useMemo(
