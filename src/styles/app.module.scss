@@ -5,21 +5,3 @@
     padding: 8px;
   }
 }
-
-.container {
-  display: grid;
-  gap: 8px;
-
-  @include pc() {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @include laptop() {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @include tablet() {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @include mobile() {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}

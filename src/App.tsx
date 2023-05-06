@@ -5,9 +5,9 @@ import usePollingController from './hooks/usePollingController';
 import DashBoard from './pages/DashBoard';
 import NavBar from './components/shared/NavBar';
 import { PageMenu, pageMenu } from './constants/pageMenu';
-import ProjectStatistics from './components/ProjectStatistics';
+import Project from './pages/Project';
 
-const navMenuComponents = [<DashBoard />, <ProjectStatistics />];
+const navMenuComponents = [<DashBoard />, <Project />];
 
 function createSameLengthRoutes<T, U>(menuList: T[], menuComponents: U[]) {
   if (menuList.length !== menuComponents.length)
@@ -30,13 +30,11 @@ function App() {
       <NavBar options={pageMenu} onChange={handleChange} selected={menu} />
       <div className={$['content']}>
         <h1>{menu.title}</h1>
-        <main className={$['container']}>
-          {
-            createSameLengthRoutes(pageMenu, navMenuComponents).find(
-              (route) => route.menu === menu.menu,
-            )?.component
-          }
-        </main>
+        {
+          createSameLengthRoutes(pageMenu, navMenuComponents).find(
+            (route) => route.menu === menu.menu,
+          )?.component
+        }
       </div>
     </div>
   );
