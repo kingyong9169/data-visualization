@@ -1,30 +1,21 @@
-import { useGetAgentList } from 'src/hooks/api/useGetAgentList';
-
-import LoadingSpinner from '../shared/LoadingSpinner';
-import ErrorFallback from '../shared/ErrorFallback';
-
 import $ from './style.module.scss';
 import AgentName from './AgentName';
 import { useAgentList } from './hooks';
 
 function AgentList() {
-  const { data, isLoading, error, reset } = useGetAgentList();
-  const { datas, isSelected, handleChange } = useAgentList(data);
-
+  const { agentList, isSelected, handleChange } = useAgentList();
   return (
     <div className={$['agent-list']}>
-      {isLoading && <LoadingSpinner />}
-      {error && <ErrorFallback message={error.message} reset={reset} />}
-      {!isLoading &&
-        !error &&
-        datas?.map((data) => (
-          <AgentName
-            key={data}
-            name={data}
-            isSelected={isSelected(data)}
-            onChange={handleChange}
-          />
-        ))}
+      {agentList.length
+        ? agentList.map((data) => (
+            <AgentName
+              key={data.oid}
+              data={data}
+              isSelected={isSelected(data)}
+              onChange={handleChange}
+            />
+          ))
+        : null}
     </div>
   );
 }

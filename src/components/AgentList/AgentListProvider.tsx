@@ -1,11 +1,17 @@
 import { createContext, useContext, useState } from 'react';
 
+export type AgentListItem = { oid: number; oname: string };
+
+export type AgentListValue = AgentListItem[] | [];
+
 const AgentListValueContext = createContext({
-  agents: [] as string[],
+  agents: [] as AgentListValue,
+  agentList: [] as AgentListValue,
 });
 
 const AgentListActionContext = createContext({
-  setAgents: {} as React.Dispatch<React.SetStateAction<string[]>>,
+  setAgents: {} as React.Dispatch<React.SetStateAction<AgentListValue>>,
+  setAgentList: {} as React.Dispatch<React.SetStateAction<AgentListValue>>,
 });
 
 type Props = {
@@ -13,11 +19,12 @@ type Props = {
 };
 
 export function AgentListProvider({ children }: Props) {
-  const [agents, setAgents] = useState<string[]>([]);
+  const [agentList, setAgentList] = useState<AgentListValue>([]);
+  const [agents, setAgents] = useState<AgentListValue>([]);
 
   return (
-    <AgentListValueContext.Provider value={{ agents }}>
-      <AgentListActionContext.Provider value={{ setAgents }}>
+    <AgentListValueContext.Provider value={{ agentList, agents }}>
+      <AgentListActionContext.Provider value={{ setAgents, setAgentList }}>
         {children}
       </AgentListActionContext.Provider>
     </AgentListValueContext.Provider>

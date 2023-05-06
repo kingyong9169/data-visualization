@@ -1,21 +1,23 @@
+import { AgentListItem } from '../AgentListProvider';
+
 import $ from './style.module.scss';
 
 type Props = {
-  name: string;
+  data: AgentListItem;
   isSelected: boolean;
-  onChange: (name: string) => void;
+  onChange: (name: AgentListItem) => void;
 };
 
 export default function AgentName(props: Props) {
-  const { name, isSelected, onChange } = props;
+  const { data, isSelected, onChange } = props;
   return (
     <button
       type="button"
-      aria-label={`에이전트 ${name} 선택 버튼`}
+      aria-label={`에이전트 ${data.oname} 선택 버튼`}
       className={`${$['name']} ${isSelected && $['name-clicked']}`}
-      onClick={() => onChange(name)}
+      onClick={() => onChange(data)}
     >
-      {name}
+      {data.oname}
     </button>
   );
 }

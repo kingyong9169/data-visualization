@@ -1,25 +1,28 @@
 import { useEffect } from 'react';
 
-import { useAgentListAction, useAgentListValue } from './AgentListProvider';
+import {
+  AgentListItem,
+  useAgentListAction,
+  useAgentListValue,
+} from './AgentListProvider';
 
-export function useAgentList(data: res.Success<res.AgentList> | null) {
-  const datas = data?.data.data.map(({ oname }) => oname);
-  const { agents } = useAgentListValue();
+export function useAgentList() {
+  const { agents, agentList } = useAgentListValue();
   const { setAgents } = useAgentListAction();
-  const isSelected = (agent: string) =>
-    !agents.length || agents.includes(agent);
+  const isSelected = (agent: AgentListItem) =>
+    agents.map(({ oid }) => oid).includes(agent.oid);
 
-  const handleChange = (agent: string) => {
+  const handleChange = (agent: AgentListItem) => {
     setAgents((agents) =>
-      agents.includes(agent)
-        ? agents.filter((a) => a !== agent)
+      agents.map(({ oid }) => oid).includes(agent.oid)
+        ? agents.filter(({ oid }) => oid !== agent.oid)
         : [...agents, agent],
     );
   };
 
   useEffect(() => {
-    setAgents(datas || []);
-  }, [data]);
+    setAgents(agentList);
+  }, [agentList]);
 
-  return { datas, agents, isSelected, handleChange };
+  return { agentList, agents, isSelected, handleChange };
 }
