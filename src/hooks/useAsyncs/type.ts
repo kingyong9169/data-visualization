@@ -18,7 +18,6 @@ type LoadingAction<T> = {
 type FetchingAction<T> = {
   type: 'FETCHING';
   fetching: boolean[];
-  data: T[];
   errorInfos: boolean[];
 };
 

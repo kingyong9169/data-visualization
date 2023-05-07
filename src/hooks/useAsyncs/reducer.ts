@@ -18,7 +18,6 @@ export function reducer<D, E>(
         ...state,
         fetching: action.fetching,
         errorInfos: action.errorInfos,
-        data: state.data?.every((d) => !!d) ? state.data : action.data,
         error: null,
       };
     case 'PART_SUCCESS':
