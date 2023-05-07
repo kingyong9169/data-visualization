@@ -80,7 +80,7 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
 
   const removeFromQueueCallback = useCallback(
     (requestInfo: QueueRequestObj) => (queue: QueueRequestObj[]) => {
-      const index = queue.findIndex((item) => item.key === requestInfo.key); // TODO: o(1)로 바꾸기
+      const index = queue.findIndex((item) => item.key === requestInfo.key);
       return index > -1 ? queue.filter((_, idx) => idx !== index) : queue;
     },
     [],
