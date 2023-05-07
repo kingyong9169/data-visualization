@@ -10,8 +10,8 @@ import TimeControl from 'src/components/shared/TimeControl';
 function DashBoard() {
   return (
     <AgentListProvider>
-      <AgentList />
       <TimeControl />
+      <AgentList />
       <Layout>
         <SpotInfo />
         <SpotMethodInfo />
