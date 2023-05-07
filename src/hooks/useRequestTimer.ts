@@ -19,5 +19,5 @@ export function useRequestTimer(
       request();
     }, pollingTime);
     return () => clearTimeout(timer);
-  }, deps);
+  }, [...deps, pollingTime]);
 }
