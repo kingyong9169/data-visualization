@@ -1,4 +1,4 @@
-import { AsyncOptions, InitialState } from './type';
+import { AsyncInfoWithId, AsyncOptions, InitialState } from './type';
 
 export const setBools =
   <D, E, T extends 'loading' | 'fetching' | 'errorInfos'>(
@@ -21,3 +21,13 @@ export const errorHappenedData =
   (state: InitialState<D, E>['data']): D[] => {
     return [...state.slice(0, idx), undefined as D, ...state.slice(idx + 1)];
   };
+
+export const getLoadingArr = (
+  itemList: AsyncInfoWithId[],
+  initState: boolean[],
+) => {
+  const itemIdxList = itemList.map(({ idx }) => idx);
+  return initState.map((bool, idx) =>
+    itemIdxList.includes(idx) ? true : bool,
+  );
+};

@@ -12,7 +12,7 @@ import {
 } from './type';
 import { reducer } from './reducer';
 import { getInitialArr } from './utils';
-import { errorHappenedData, setData, setBools } from './helpers';
+import { errorHappenedData, setData, setBools, getLoadingArr } from './helpers';
 
 /**
  * 동일한 타입을 리턴하는 여러 api 요청을 관리하는 커스텀 훅
@@ -99,16 +99,15 @@ export default function useAsyncs<D, E extends Error = Error>(
     if (isChange) {
       dispatch({
         type: 'LOADING',
-        loading: [...loadingArr],
+        loading: getLoadingArr(itemList, [...loadingArr]),
         errorInfos: [...loadingEndArr],
         data: [...initialDataArr],
       });
     } else
       dispatch({
         type: 'FETCHING',
-        fetching: [...loadingArr],
+        fetching: getLoadingArr(itemList, [...loadingArr]),
         errorInfos: [...loadingEndArr],
-        data: [...initialDataArr],
       });
     queueRequests(getQueueReadyList(itemList, isChange));
   };
