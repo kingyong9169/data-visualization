@@ -33,7 +33,7 @@ type PollingActionContext = {
   removeFromQueue: (
     kind: 'wait' | 'progress',
     requestInfo: QueueRequestObj,
-  ) => void;
+  ) => QueueRequestObj;
   queueRequest: (request: QueueRequestObj) => void;
   queueRequests: (requestList: QueueRequestObj[]) => void;
 };
@@ -48,7 +48,12 @@ const ApiPollingActionContext = createContext<PollingActionContext>({
   setActiveRequestNum: () => {},
   setQueue: () => {},
   addToQueue: () => {},
-  removeFromQueue: () => {},
+  removeFromQueue: () => ({
+    key: '',
+    type: '',
+    onSuccess: () => {},
+    onError: () => {},
+  }),
   queueRequest: () => {},
   queueRequests: () => {},
 });
@@ -98,12 +103,16 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
           setInProgressQueue(queue);
         }
       },
-      removeFromQueue(kind: 'wait' | 'progress', requestInfo: QueueRequestObj) {
+      removeFromQueue(
+        kind: 'wait' | 'progress',
+        requestInfo: QueueRequestObj,
+      ): QueueRequestObj {
         if (kind === 'wait') {
           setWaitingQueue(removeFromQueueCallback(requestInfo));
         } else {
           setInProgressQueue(removeFromQueueCallback(requestInfo));
         }
+        return { ...requestInfo };
       },
       queueRequest(request: QueueRequestObj) {
         return addToQueue('wait', request);
