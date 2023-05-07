@@ -86,11 +86,6 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
     [],
   );
 
-  // 각 요청에 대한 인덱스에 boolean을 넣은 배열을 만들어서 관리
-  // true면 건너뛰고
-  // 큐에 100개가 들어오면 한 번에 filter로 정리
-  // pointer 상태로 최근 요청 가리키기
-
   const actions = useMemo(
     () => ({
       setActiveRequestNum,
