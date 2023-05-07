@@ -5,11 +5,13 @@ import SpotInfo from 'src/components/SpotInfo';
 import SpotMethodInfo from 'src/components/SpotMethodInfo';
 import SpotTransaction from 'src/components/SpotTransaction';
 import Layout from 'src/components/shared/Layout';
+import TimeControl from 'src/components/shared/TimeControl';
 
 function DashBoard() {
   return (
     <AgentListProvider>
       <AgentList />
+      <TimeControl />
       <Layout>
         <SpotInfo />
         <SpotMethodInfo />
