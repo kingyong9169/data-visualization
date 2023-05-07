@@ -1,17 +1,21 @@
 import { useReducer, useEffect, useCallback } from 'react';
 import { useApiPollingAction } from 'src/store/ApiRequestPollingContext';
-import { AsyncInfo } from 'src/types/async';
 
 import { useRequestTimer } from '../useRequestTimer';
 
-import { AsyncInfoWithId, AsyncOptions, ReducerFn } from './type';
+import {
+  MultiAsyncItem,
+  AsyncInfoWithId,
+  AsyncOptions,
+  ReducerFn,
+} from './type';
 import { reducer } from './reducer';
 import { getInitialArr } from './utils';
 import { errorHappenedData, setData, setBools } from './helpers';
 
 export default function useAsyncs<D, E extends Error = Error>(
   deps: unknown[],
-  queueItemList: AsyncInfo[],
+  queueItemList: MultiAsyncItem[],
   options: AsyncOptions<D> = {},
 ) {
   // TODO: 각 쿼리 아이템에 options를 받게끔 확장하기
@@ -46,7 +50,8 @@ export default function useAsyncs<D, E extends Error = Error>(
     isChange?: boolean,
   ) => {
     return itemList.map((queueItem) => {
-      const { idx, type, key, needStime, needEtime, term, apiKind } = queueItem;
+      const { idx, type, key, needStime, needEtime, term, apiKind, params } =
+        queueItem;
       const lastTime =
         (lastEtime && !isChange && lastEtime(state.data[idx])) || 0;
       const stime: number =
@@ -56,7 +61,7 @@ export default function useAsyncs<D, E extends Error = Error>(
         type,
         apiKind,
         key,
-        param: { stime, etime },
+        param: { ...params, stime, etime },
         onSuccess: (data: D) => {
           const loadingCallback = <T extends 'loading' | 'fetching'>() =>
             setBools<D, E, T>(idx, false);

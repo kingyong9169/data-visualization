@@ -64,7 +64,9 @@ export type ReducerFn<D, E> = (
   action: InitialAction<D, E>,
 ) => InitialState<D, E>;
 
-export type AsyncInfoWithId = AsyncInfo & {
+export type MultiAsyncItem = Omit<AsyncInfo, 'sTime' | 'eTime'>;
+
+export type AsyncInfoWithId = MultiAsyncItem & {
   idx: number;
 };
 
