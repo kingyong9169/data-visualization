@@ -1,9 +1,12 @@
 import { AsyncOptions, InitialState } from './type';
 
 export const setBools =
-  <D, E, T extends 'loading' | 'fetching' | 'errorInfos'>(idx: number) =>
+  <D, E, T extends 'loading' | 'fetching' | 'errorInfos'>(
+    idx: number,
+    value: boolean,
+  ) =>
   (bools: InitialState<D, E>[T]): boolean[] => {
-    return [...bools.slice(0, idx), false, ...bools.slice(idx + 1)];
+    return [...bools.slice(0, idx), value, ...bools.slice(idx + 1)];
   };
 
 export const setData =

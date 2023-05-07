@@ -58,10 +58,12 @@ export default function useAsyncs<D, E extends Error = Error>(
         key,
         param: { stime, etime },
         onSuccess: (data: D) => {
+          const loadingCallback = <T extends 'loading' | 'fetching'>() =>
+            setBools<D, E, T>(idx, false);
           dispatch({
             type: 'PART_SUCCESS',
-            loadingCb: isChange ? setBools<D, E, 'loading'>(idx) : undefined,
-            fetchingCb: isChange ? undefined : setBools<D, E, 'fetching'>(idx),
+            loadingCb: isChange ? loadingCallback<'loading'>() : undefined,
+            fetchingCb: isChange ? undefined : loadingCallback<'fetching'>(),
             dataCb: setData<D, E>(data, idx, select),
           });
         },
@@ -70,7 +72,7 @@ export default function useAsyncs<D, E extends Error = Error>(
             type: 'ERROR',
             error: e,
             errorCb: errorHappenedData(idx),
-            errorInfosCb: setBools<D, E, 'errorInfos'>(idx),
+            errorInfosCb: setBools<D, E, 'errorInfos'>(idx, true),
             loading: [...loadingEndArr],
             fetching: [...loadingEndArr],
           }),
