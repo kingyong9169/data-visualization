@@ -1,8 +1,16 @@
-# 대시보드 제작 프로젝트(데이터 시각화)
+# APM 대시보드 제작 프로젝트
 
-> Open API를 활용한 대시보드 구현
+> Open API를 활용하여 대시보드 만들기
+
+## 프로젝트 문서
+
+1. [요구사항 분석](./requirements.md)
+2. [고민되는 점](./worry.md)
+3. [트러블 슈팅](./trouble_shooting.md)
 
 ## 실행 방법
+
+> Chrome에서 CORS 이슈 발생 시 [참고 문서](https://alfilatov.com/posts/run-chrome-without-cors/)를 통해 해결할 수 있습니다.
 
 ```bash
 
@@ -104,7 +112,8 @@ $ yarn preview
 
 1. ~~네트워크 요청 부하 성능 최적화~~
 2. ~~data fetching 실패 시 예외 처리~~
-3. UX 개선
+3. ~~대시보드 기능 개선~~
+4. 차트 UX 개선
 
 - 라인 차트 indicator
 - 차트 도움말 제공
