@@ -75,3 +75,11 @@ export type AsyncOptions<D> = {
   lastEtime?: (state: D) => number;
   skip?: boolean;
 };
+
+export type UseAsyncsResult<D, E> = {
+  data: D[];
+  error: E | null;
+  isLoading: boolean;
+  isFetching: boolean;
+  reset: () => void;
+};

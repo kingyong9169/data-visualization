@@ -5,16 +5,23 @@ import { AsyncInfo } from 'src/types/async';
 
 import { useRequestTimer } from '../useRequestTimer';
 
-import { AsyncOptions, ReducerFn } from './type';
+import { AsyncOptions, ReducerFn, UseAsyncResult } from './type';
 import { reducer } from './reducer';
 
-// TODO: 요청 파라미터 캐싱
+/**
+ * api 요청을 관리하는 커스텀 훅
+ * queueItem에 sTime, eTime을 지정할 수 있음
+ * @param deps
+ * @param queueItem
+ * @param options
+ * @returns {UseAsyncResult<D, E>}
+ */
 
 export default function useAsync<D, E extends Error = Error>(
   deps: unknown[],
   queueItem: AsyncInfo,
   options: AsyncOptions<D, E> = {},
-) {
+): UseAsyncResult<D, E> {
   const { select, lastEtime, skip, timeSkip } = options;
   const { queueRequest } = useApiPollingAction();
 
@@ -77,7 +84,6 @@ export default function useAsync<D, E extends Error = Error>(
 
   return {
     ...state,
-    refetch: makeRequest,
     reset,
   };
 }

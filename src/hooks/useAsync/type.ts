@@ -45,3 +45,7 @@ export type AsyncOptions<D, E> = {
   skip?: boolean;
   timeSkip?: boolean;
 };
+
+export type UseAsyncResult<D, E> = InitialState<D, E> & {
+  reset: () => void;
+};

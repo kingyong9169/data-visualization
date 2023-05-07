@@ -8,16 +8,26 @@ import {
   AsyncInfoWithId,
   AsyncOptions,
   ReducerFn,
+  UseAsyncsResult,
 } from './type';
 import { reducer } from './reducer';
 import { getInitialArr } from './utils';
 import { errorHappenedData, setData, setBools } from './helpers';
 
+/**
+ * 동일한 타입을 리턴하는 여러 api 요청을 관리하는 커스텀 훅
+ * 각 queueItem에 sTime, eTime은 지정할 수 없음
+ * @param deps
+ * @param queueItemList
+ * @param options
+ * @returns {UseAsyncsResult<D, E>}
+ */
+
 export default function useAsyncs<D, E extends Error = Error>(
   deps: unknown[],
   queueItemList: MultiAsyncItem[],
   options: AsyncOptions<D> = {},
-) {
+): UseAsyncsResult<D, E> {
   // TODO: 각 쿼리 아이템에 options를 받게끔 확장하기
   const { select, lastEtime, skip } = options;
   const { queueRequests } = useApiPollingAction();
@@ -134,7 +144,6 @@ export default function useAsyncs<D, E extends Error = Error>(
     error: state.error,
     isLoading: state.loading.some((loading) => loading),
     isFetching: state.fetching.some((loading) => loading),
-    refetch: makeRequest,
     reset,
   };
 }
