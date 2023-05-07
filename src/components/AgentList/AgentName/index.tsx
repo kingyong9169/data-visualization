@@ -1,4 +1,4 @@
-import { AgentListItem } from '../AgentListProvider';
+import { AgentListItem } from 'src/store/AgentListProvider';
 
 import $ from './style.module.scss';
 

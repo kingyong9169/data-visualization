@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-
 import {
   AgentListItem,
   useAgentListAction,
   useAgentListValue,
-} from './AgentListProvider';
+} from 'src/store/AgentListProvider';
 
 export function useAgentList() {
   const { agents, agentList } = useAgentListValue();

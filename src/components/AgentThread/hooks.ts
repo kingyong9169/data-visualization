@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
 import {
   useAgentListAction,
   useAgentListValue,
-} from '../AgentList/AgentListProvider';
+} from 'src/store/AgentListProvider';
 
 import { threadKindDatas, threadTypeDatas } from './constants';
 import { refineAgentList } from './helpers';
