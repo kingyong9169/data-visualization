@@ -72,3 +72,16 @@
 
 1. 시간과 관련된 상태(날짜, 시간)가 변경되었을 때만 Date 객체를 생성하도록 시간 상태를 useState로 관리.
 2. useEffect를 사용하여 상태 업데이트
+
+## 6. usePollingController에서 forEach를 사용하는데 side effect가 발생할 수 있음
+
+### 문제 상황
+
+1. queue에서 요청할 부분을 slice로 자름.
+2. slice된 queue를 forEach로 순회하며 요청.
+3. forEach에서 해당 queue상태를 변경하여 side effect가 발생할 수 있음.
+
+### 문제 해결
+
+1. slice된 queue를 map으로 순회하며 상태를 변경하고 파라미터에 넣은 값을 깊은 복사하여 요청할 api 정보 배열로 리턴.
+2. 리턴된 배열을 forEach로 순회하며 요청하여 side effect 방지.
