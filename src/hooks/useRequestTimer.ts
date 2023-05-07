@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { POLLING_DURATION } from 'src/constants/polling';
+import { useTimeControlValue } from 'src/store/TimeControlProvider';
 
 type TimerOptions = {
   dismissCondition?: boolean;
@@ -10,13 +10,14 @@ export function useRequestTimer(
   request: () => void,
   options: TimerOptions = {},
 ) {
+  const { pollingTime } = useTimeControlValue();
   const { dismissCondition } = options;
 
   useEffect(() => {
     if (dismissCondition) return;
     const timer = setTimeout(() => {
       request();
-    }, POLLING_DURATION); // TODO: 시간을 상태로 바꾸기
+    }, pollingTime);
     return () => clearTimeout(timer);
   }, deps);
 }
