@@ -1,41 +1,32 @@
 import $ from '@styles/app.module.scss';
-import { useState } from 'react';
 
 import usePollingController from './hooks/usePollingController';
 import DashBoard from './pages/DashBoard';
 import NavBar from './components/shared/NavBar';
-import { PageMenu, pageMenu } from './constants/pageMenu';
+import { pageMenu } from './constants/pageMenu';
 import Project from './pages/Project';
+import MainContent from './components/shared/MainContent';
+import { useAppContent } from './hooks/useAppContent';
+import {
+  createSameLengthRoutes,
+  getRouteByMenu,
+} from './utils/getRouteByMenu';
 
 const navMenuComponents = [<DashBoard />, <Project />];
 
-function createSameLengthRoutes<T, U>(menuList: T[], menuComponents: U[]) {
-  if (menuList.length !== menuComponents.length)
-    throw new Error('The arrays must have the same length');
-  return pageMenu.map((menu, index) => ({
-    ...menu,
-    component: menuComponents[index],
-  }));
-}
-
 function App() {
-  const [menu, setMenu] = useState<PageMenu>(pageMenu[0]);
-  const handleChange = (page: PageMenu) =>
-    setMenu((prev) => (prev.menu !== page.menu ? page : prev));
-
+  const { menu, handleChange } = useAppContent();
   usePollingController();
 
   return (
     <div className={$['root']}>
       <NavBar options={pageMenu} onChange={handleChange} selected={menu} />
-      <div className={$['content']}>
-        <h1>{menu.title}</h1>
-        {
-          createSameLengthRoutes(pageMenu, navMenuComponents).find(
-            (route) => route.menu === menu.menu,
-          )?.component
-        }
-      </div>
+      <MainContent title={menu.title}>
+        {getRouteByMenu(
+          createSameLengthRoutes(pageMenu, navMenuComponents),
+          menu.menu,
+        )}
+      </MainContent>
     </div>
   );
 }
