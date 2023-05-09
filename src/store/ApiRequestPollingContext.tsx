@@ -69,11 +69,8 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
 
   const addToQueue = useCallback(
     (kind: 'wait' | 'progress', requestInfo: QueueRequestObj) => {
-      if (kind === 'wait') {
-        setWaitingQueue((queue) => [...queue, requestInfo]);
-      } else {
-        setInProgressQueue((queue) => [...queue, requestInfo]);
-      }
+      const setState = kind === 'wait' ? setWaitingQueue : setInProgressQueue;
+      setState((queue) => [...queue, requestInfo]);
     },
     [],
   );
@@ -92,21 +89,15 @@ function ApiPollingProvider({ children }: Props): JSX.Element {
       addToQueue,
       removeFromQueueCallback,
       setQueue(kind: 'wait' | 'progress', queue: QueueRequestObj[]) {
-        if (kind === 'wait') {
-          setWaitingQueue(queue);
-        } else {
-          setInProgressQueue(queue);
-        }
+        const setState = kind === 'wait' ? setWaitingQueue : setInProgressQueue;
+        setState(queue);
       },
       removeFromQueue(
         kind: 'wait' | 'progress',
         requestInfo: QueueRequestObj,
       ): QueueRequestObj {
-        if (kind === 'wait') {
-          setWaitingQueue(removeFromQueueCallback(requestInfo));
-        } else {
-          setInProgressQueue(removeFromQueueCallback(requestInfo));
-        }
+        const setState = kind === 'wait' ? setWaitingQueue : setInProgressQueue;
+        setState(removeFromQueueCallback(requestInfo));
         return { ...requestInfo };
       },
       queueRequest(request: QueueRequestObj) {
