@@ -4,9 +4,7 @@
 
 ## Demo
 
-<video controls width="400">
-    <source src="https://github.com/kingyong9169/data-visualization/assets/62797441/998eebed-e7a8-4892-bae0-591236fa0e80" />
-</video>
+https://github.com/kingyong9169/data-visualization/assets/62797441/948fd1e4-0ea4-40f0-b6d8-791ee08ed18a
 
 ## 프로젝트 문서
 
