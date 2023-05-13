@@ -2,6 +2,12 @@
 
 > Open API를 활용하여 대시보드 만들기
 
+## Demo
+
+<video controls width="400">
+    <source src="https://github.com/kingyong9169/data-visualization/assets/62797441/998eebed-e7a8-4892-bae0-591236fa0e80" />
+</video>
+
 ## 프로젝트 문서
 
 1. [요구사항 분석](./requirements.md)
